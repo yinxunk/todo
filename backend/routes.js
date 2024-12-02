@@ -3,7 +3,7 @@ const db = require("./db");
 const router = express.Router();
 
 router.get("/todos", (req, res) => {
-    db.all("SELECT * FROM todos", [], (err, rows) => {
+    db.all("SELECT * FROM todos ORDER BY priority DESC", [], (err, rows) => {
         if (err) res.status(500).json({error: err.message});
         else res.json(rows);
     });
@@ -51,6 +51,20 @@ router.delete("/todos/", (req,res) => {
 
 router.put("/todos/:id", (req, res) => {
     const id = req.params.id;
-    const {edit} = req.body;
-    db.run("UPDATE todos SET ")
-})
+    const {edit,  value} = req.body;
+    // const allowedFields = ["title", "priority", "completed"];
+    // if(!allowedFields.includes(edit)){
+    //     return res.status(400).json({error: "Invalid field specified for update"});
+    // }
+    db.run(`UPDATE todos SET ${edit} = ? WHERE id = ? `, [value, id], 
+        function(err) {
+            if(err) {
+                return res.status(500).json({error:err.message});
+            }else {
+                return res.json({message: `${edit} of ${id} edited to ${value}`});
+            }
+        }
+    );
+});
+
+module.exports = router;

@@ -1,6 +1,6 @@
 const express = require("express");
 const todosRoutes = require("./routes");
-const { todo } = require("node:test");
+
 
 const app = express();
 app.use("/todos", todosRoutes);

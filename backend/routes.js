@@ -2,18 +2,23 @@ const express = require("express");
 const db = require("./db");
 const router = express.Router();
 
-router.get("/todos", (req, res) => {
+router.get("/", (req, res) => {
     db.all("SELECT * FROM todos ORDER BY priority DESC", [], (err, rows) => {
         if (err) res.status(500).json({error: err.message});
         else res.json(rows);
     });
 });
 
-router.post("/toods", (req, res) => {
-    const todo = req.body;
-    const {title, completed, priority} = todo;
-    db.run("INSERT TODO todos (title, completed, priority) VALUES (?, ?, ?)"),
-        [title, completed, priority],
+router.post("/", (req, res) => {
+    
+    const {title, completed, priority, duedate} = req.body;
+    console.log(req.body);
+
+    if (!title || completed === undefined || priority === undefined) {
+        return res.status(400).json({ error: "Missing required fields: title, completed, or priority" });
+    }
+    db.run("INSERT INTO todos (title, completed, priority, duedate) VALUES (?, ?, ?, ?)"),
+        [title, completed, priority, duedate],
         function(err) {
             if(err) {
                 return res.status(500).json({error: err.message});
@@ -23,8 +28,8 @@ router.post("/toods", (req, res) => {
         }
 })
 
-router.delete("/todos/:id", (req,res) => {
-    const id = req.params;
+router.delete("/:id", (req,res) => {
+    const {id} = req.params;
     db.run("DELETE FROM todos WHERE id = ?", [id],
         function(err) {
             if (err){
@@ -36,7 +41,7 @@ router.delete("/todos/:id", (req,res) => {
     );
 });
 
-router.delete("/todos/", (req,res) => {
+router.delete("/", (req,res) => {
     db.run("DELETE FROM todos WHERE completed = ?" ,[true],
         function(err) {
             if(err) {
@@ -49,8 +54,8 @@ router.delete("/todos/", (req,res) => {
     );
 });
 
-router.put("/todos/:id", (req, res) => {
-    const id = req.params.id;
+router.put("/:id", (req, res) => {
+    const {id} = req.params.id;
     const {edit,  value} = req.body;
     // const allowedFields = ["title", "priority", "completed"];
     // if(!allowedFields.includes(edit)){

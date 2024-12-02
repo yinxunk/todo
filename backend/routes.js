@@ -17,7 +17,7 @@ router.post("/", (req, res) => {
     if (!title || completed === undefined || priority === undefined) {
         return res.status(400).json({ error: "Missing required fields: title, completed, or priority" });
     }
-    db.run("INSERT INTO todos (title, completed, priority, duedate) VALUES (?, ?, ?, ?)"),
+    db.run("INSERT INTO todos (title, completed, priority, duedate) VALUES (?, ?, ?, ?)",
         [title, completed, priority, duedate],
         function(err) {
             if(err) {
@@ -25,17 +25,17 @@ router.post("/", (req, res) => {
             }else {
                 return res.json({id: this.lastID, title, completed, priority});
             }
-        }
+        })
 })
 
 router.delete("/:id", (req,res) => {
-    const {id} = req.params;
+    const id = req.params.id;
     db.run("DELETE FROM todos WHERE id = ?", [id],
         function(err) {
             if (err){
                 return res.status(500).json({error:err.message});
             }else {
-                return res.json({message:"Todo deleted", id});
+                return res.json({message:`Todo deleted: ${id}`});
             }
         }
     );
@@ -55,8 +55,8 @@ router.delete("/", (req,res) => {
 });
 
 router.put("/:id", (req, res) => {
-    const {id} = req.params.id;
-    const {edit,  value} = req.body;
+    const id = req.params.id;
+    const {edit ,value} = req.body;
     // const allowedFields = ["title", "priority", "completed"];
     // if(!allowedFields.includes(edit)){
     //     return res.status(400).json({error: "Invalid field specified for update"});

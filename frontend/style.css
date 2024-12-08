@@ -1,0 +1,401 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+html{
+    height: auot;
+    font-family: "Poppins", sans-serif;
+}
+body{
+    
+    margin: 0;
+    height: auot;
+}
+
+.dothingsapp {
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    width: 100%;
+    z-index: 1;
+}
+
+.sidebar {
+    flex:0 0 277px; /* Fixed size of 277. */
+    background-color: beige;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    transition: 0.1s;
+     /* Default visible state */
+    
+    
+    
+}
+.main {
+    display: flex;
+    flex-grow: 2;
+    flex-direction: column;
+    width: 100%;
+}
+.todos {
+    flex:1 1 100% ;
+    justify-content: center;
+    padding: 2em 20% 0 20%;
+}
+
+.hide-button{
+    height: 3em;
+}
+
+.todos h1 {
+    margin-top: 0.335em;
+}
+
+.todo-list{
+    padding: 0 0 0 0 ;
+    
+}
+
+.todo-list li input {
+    margin: 0 1em 0 0;
+}
+
+.sidebar-content{
+    width: 100%;
+    padding: 0;
+}
+
+.sidebar-content > li {
+    width: 100%;
+}
+.hide-button  {
+    display: flex;
+    justify-content: flex-end;
+    height: 2em;
+}
+
+.hide-button button {
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+.sidebutton {
+    height: 3em;
+    display: flex;
+    text-decoration: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 95%;
+    margin: 0 0 0 0.5em;
+    border-radius: 5px;
+}
+
+
+
+.sidebutton:hover{
+    background-color: aliceblue;
+    transition: 0.5s;
+    transform: scale(0.95);
+    border: 1px solid beige;
+}
+
+.sidebutton > svg {
+    height: 100%;
+}
+.sidebutton span{
+    padding-top: 0.25em;
+    font-family: "Poppins", sans-serif;
+    font-size: 20px;
+}
+
+.add-Task .sidebutton span {
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+}
+
+ul {
+    list-style-type: none;
+   
+}
+
+
+
+/*state class to hide sidebar*/
+.sidebar.hidden{
+    
+    transition: 0.5s;
+    flex:0 0 0  ;
+    width: 0px;
+
+}
+
+.main > div:first-child {
+    height: 2em;
+}
+.main > div:first-of-type button{
+    width: 36px;
+    height: 100%;
+    border: none;
+    background:none;
+    padding: 0;
+    cursor: pointer;
+    
+}
+
+.due-date > div:first-child > div {
+    text-align: center;
+    margin-top: 2em;
+    > span {
+        color: rgb(77, 141, 143);
+        font-family: "Poppins", sans-serif;
+        font-weight: 600;
+        font-style: normal;
+    }
+    
+}
+
+.due-date > div:first-child > ul {
+    padding: 0 0 0 1em;
+}
+
+.theme {
+    position: absolute;
+    bottom: 0;
+    left: 0.5em;
+}
+/*state clas to hide expand button when sidebar is out*/
+.hide {
+    display: none;
+    transition: ease-in-out;
+}
+
+.add-activity {
+    padding-left: 0;
+    width: 100%;
+    display: flex;
+    height: 3em;
+    border: none;
+    background: none;
+    > span {
+        font-family: "Poppins", sans-serif;
+        
+        display: flex;
+        height: 100%;
+        margin: 0   ;
+        justify-content: center;
+        align-items: center;
+        
+        
+        
+    }
+    > svg{
+        height: 100%;
+        margin-right: 1em;
+    }
+}
+
+.add-activity:hover span{
+    color: rgb(77, 141, 143);
+    
+}
+
+.add-activity:hover svg > path {
+    fill: rgb(77, 141, 143);
+    
+}
+
+.check   {
+    border: none;
+    background:none;
+    padding-left: 0;
+}
+
+.tick {
+    opacity: 0;
+}
+
+.check:hover .tick {
+    opacity: 0.7;
+    transition: 0.5s;
+}
+
+.todo-item > span {
+    position: absolute;
+}
+
+.todo-item{
+    border-bottom: 1px solid lightgrey;
+    width: 95%;
+    padding-top: 0.7em;
+}
+
+
+/*search box*/
+
+.search-overlay {
+    width: 100%;
+    height: 100%;
+    
+    position: fixed;
+    padding-top: 10em;
+    padding-left: 20%;
+    z-index: 1000;
+    display: none;
+    
+    
+    
+}
+
+#searchbox {
+    width: 40%;
+    background-color: white;
+    
+    box-shadow: 0 0 10px grey ;
+    border-radius: 10px;
+    max-height: 40%;
+    /* min-width: 80%; */
+   
+    
+}
+
+.search {
+    border-bottom: 0.5px solid #f2f2f2;
+}
+.search > input {
+    border: none;
+    background: none;
+    outline: none;
+    appearance: none ;
+    height: 3em;
+    width: 100%;
+}
+
+.search > input:focus {
+    border: 0;
+    appearance: none;
+    outline: none;
+    
+}
+
+.search > div > svg {
+    height: 100%;
+    padding: 0 0.2em 0 0.2em;
+}
+#searchbox > input::before {
+    content: url('../icons8-suche.svg');
+    vertical-align: middle;
+}
+.search {
+    display: flex;
+
+}
+
+.Recently {
+    font-size: 12px;
+    color: grey;
+    padding: 0.7em 0 0.7em 0.7em;
+}
+
+.Recently:nth-of-type(1){
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.search-content {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.common-searched {
+    padding-left: 0.7em;
+}
+
+input {
+    appearance: none;
+    border: none;
+    outline: none;
+    
+}
+.add-overlay {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid grey;
+    border-radius: 7px;
+    padding-left: 0.7em;
+    
+}
+
+.add-overlay > input{
+    width: 90%;
+    border-radius: 7px;
+}
+
+.add-overlay > div:first-of-type {
+    border-bottom: 1px solid lightgray;
+}
+
+#addtaskinput {
+    height:2em;
+    font-size: 1em;
+    font-weight: bold;
+    font-family: "Poppins", sans-serif;
+    margin-top:0.3em;
+}
+.category {
+    background-color: white;
+    border: none;
+    outline: auto;
+    outline-color: lightgray;
+    border-radius: 7px;
+    
+}
+
+.category > span {
+    color: grey;
+    height: 100%;
+    display: block;
+    
+}
+
+.category > svg {
+    height: 100%;
+}
+
+.cancel-enter{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1em;
+}
+
+.cancel-enter > button:first-of-type {
+    border: none;
+    outline: grey;
+    border-radius: 7px;
+    >span {
+        font-family: "Poppins", sans-serif;
+        font-weight:600;
+    }
+    height: 3em;
+    width: 6em;
+    margin: 0 0.7em 0.7em 0;
+}
+
+.cancel-enter > button:nth-of-type(2) {
+    border: none;
+    outline: rgb(223, 74, 74);
+    background-color:rgb(223, 74, 74) ;
+    border-radius: 7px;
+    >span {
+        font-family: "Poppins", sans-serif;
+        font-weight:600;
+    }
+    height: 3em;
+    width: 6em;
+    margin:0 0.7em 0.7em 0 ;
+}
+
+.hidebutton {
+    display: none;
+}
+

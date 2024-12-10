@@ -6,7 +6,7 @@ const router = express.Router();
 router.use(cors());
 
 router.get("/", (req, res) => {
-    db.all("SELECT * FROM todos ORDER BY priority DESC", [], (err, rows) => {
+    db.all("SELECT * FROM todos ORDER BY priority DESC, duedate ASC", [], (err, rows) => {
         if (err) res.status(500).json({error: err.message});
         else res.json(rows);
     });
@@ -26,9 +26,19 @@ router.post("/", (req, res) => {
             if(err) {
                 return res.status(500).json({error: err.message});
             }else {
-                return res.json({id: this.lastID, title, completed, priority, description});
+                return res.json({id: this.lastID, title, completed,duedate, priority, description});
             }
         })
+})
+
+router.get("/date", (req,res) => {
+    db.all("SELECT * FROM todos WHERE duedate IS NOT NULL AND duedate != '' ORDER BY priority DESC, duedate ASC ", [], (err, rows) => {
+        if (err){
+            res.status(500).json({error: err.message});
+            console.error("Error fetching data:", err);
+        } 
+        else res.json(rows);
+    })
 })
 
 router.delete("/:id", (req,res) => {

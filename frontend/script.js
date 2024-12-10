@@ -110,6 +110,46 @@
     
 // }
 
+function toggleHide(){
+    const width = 46 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    
+    if(window.innerWidth <= width) {
+        const hidebuttonmain = document.querySelector(".main > div:first-of-type > button");
+        const sidebar = document.querySelector(".sidebar");
+        const sidebarcontent = document.querySelector(".sidebar-content");
+        const sidebarhidebutton = document.querySelector(".hide-button");
+        const themebutton = document.querySelector(".theme");
+        hidebuttonmain.setAttribute("class", '');
+        sidebar.classList.toggle('hidden');
+        sidebarcontent.classList.toggle("hide");
+        sidebarhidebutton.classList.toggle("hide");
+        themebutton.classList.toggle("hide");
+
+    }else if(window.innerWidth >= width) {
+        const hidebuttonmain = document.querySelector(".main > div:first-of-type > button");
+        hidebuttonmain.setAttribute("class", "hide");
+        const sidebar = document.querySelector(".sidebar.hidden");
+        sidebar.classList.toggle("hidden")
+        const sidebarcontent = document.querySelector(".sidebar-content.hide");
+        sidebarcontent.classList.toggle("hide");
+        const sidebarhidebutton = document.querySelector(".hide-button.hide");
+        sidebarhidebutton.classList.toggle("hide");
+        const themebutton = document.querySelector(".theme.hide");
+        themebutton.classList.toggle("hide");
+        const main = document.querySelector('.main');
+        main.style.backgroundColor = "white";
+    }
+    
+}
+
+function debounce() {
+    resizeTimeout = setTimeout(() => {
+        toggleHide();
+    }, 100)
+    clearTimeout(resizeTimeout);
+    
+}
+window.addEventListener("resize", toggleHide)
 //Frontend only
 //to hide sidebar
 const hidebuttonmain = document.querySelector(".main > div:first-of-type > button");
@@ -125,6 +165,8 @@ hidebutton.addEventListener("click", () => {
     sidebarhidebutton.classList.toggle("hide");
     const themebutton = document.querySelector(".theme")
     themebutton.classList.toggle("hide");
+    const main = document.querySelector('.main');
+    main.style.backgroundColor = "white"
     
     
 })
@@ -140,6 +182,11 @@ hidebuttonmain.addEventListener("click", () => {
     sidebarhidebutton.classList.toggle("hide");
     const themebutton = document.querySelector(".theme.hide")
     themebutton.classList.toggle("hide");
+    width = 46 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    if(window.innerWidth <= width){
+        const main = document.querySelector('.main');
+        main.style.backgroundColor = "#bfbfbf"
+    }
     
     
 })
@@ -193,7 +240,7 @@ async function insert(title, priority, duedate, description){
         const request = new Request("http://localhost:3000/todos", {
             method: "POST",
             headers: {"Content-Type" : "application/json"},
-            body: JSON.stringify({title: title, completed: false, priority: priority, duedate: duedate, description:description})
+            body: JSON.stringify({title: title, completed: false, priority: priority, duedate: duedate, description:description, })
         });
         const response = await fetch(request);
         if(!response.ok){
@@ -209,7 +256,7 @@ async function insert(title, priority, duedate, description){
 todos()
 
 //add a todo
-
+localStorage.clear()
 let currentid = localStorage.getItem('counter')
     ? parseInt(localStorage.getItem('counter'),10)
     : 0;
@@ -228,11 +275,13 @@ add.addEventListener("click", () => {
     const count = `count${currentid}`;
     const addtaskinput = document.querySelector('#addtaskinput');
     const addtaskdescription = document.querySelector('#addtaskdescription');
+    const date = document.querySelector('.category > input');
     if(addtaskinput.value === ''){
         return
     }
     else {
-        insert(addtaskinput.value, 2, "hihi", addtaskdescription.value);
+        console.log(date.value)
+        insert(addtaskinput.value, 4, date.value, addtaskdescription.value);
         
         const button = 
         `<li class="todo-item">
@@ -248,9 +297,31 @@ add.addEventListener("click", () => {
         const ul = document.querySelector(".todo-list");
         ul.insertAdjacentHTML('beforeend', button);
         addtaskinput.value = ''
-        
+        addtaskdescription.value = '';
+        date.value = '';
+    
         console.log(count)
     }
+    ul.innerHTML = '';
+        todos().then((data) => {
+            data.forEach((todo) => {
+                console.log(todo.id);
+                console.log(todo.description)
+                todo.description = todo.description === undefined? '' : todo.description;
+                const button = 
+                `<li class="todo-item">
+                    <button class="check count${todo.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                        <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                        <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                        </svg>
+                    </button>
+                    <span>${todo.title}</span>
+                    <div>${todo.description}</div>
+                </li>`
+            ul.insertAdjacentHTML('beforeend', button);
+            })
+        })
 })
 //list all todos
 
@@ -273,12 +344,30 @@ async function todos() {
     
 }
 todos()
+
+async function getDate() {
+    try {
+        const response = await fetch(`http://localhost:3000/todos/date`);
+        if(!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+        const data = await response.json();
+        data.forEach((todo, index) => {
+            console.log(`Todo ${index + 1}:`, todo);
+        });
+        
+    }catch(error){
+        console.log(error);
+    }
+}
+getDate();
 document.addEventListener('DOMContentLoaded', () => {
     const ul = document.querySelector('.todo-list');
     todos().then((data) => {
         data.forEach((todo) => {
             console.log(todo.id);
-            console.log(todo.description)
+            console.log(todo.duedate);
+            console.log(todo.description);
             todo.description = todo.description === undefined? '' : todo.description;
             const button = 
             `<li class="todo-item">
@@ -291,8 +380,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span>${todo.title}</span>
                 <div>${todo.description}</div>
             </li>`
-        ul.insertAdjacentHTML('beforeend', button);
+            ul.insertAdjacentHTML('beforeend', button);
         })
+    }).catch((err) => {
+        console.log(err);
+    })
+    const duedates = document.querySelector('.due-date > div > ul');
+    getDate().then((data) => {
+
+            duedates.innerHTML= ''
+            data.forEach((todo) => {
+                console.log(todo.id);
+                console.log(todo.duedate);
+                console.log(todo.description);
+                todo.description = todo.description === undefined? '' : todo.description;
+                const button = 
+                `<li class="todo-item">
+                    <button class="check count${todo.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                        <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                        <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                        </svg>
+                    </button>
+                    <span>${todo.title}</span>
+                    <div>${todo.description}</div>
+                </li>`
+                duedates.insertAdjacentHTML('beforeend', button)
+            })
+        
     })
     
 })
@@ -356,3 +471,26 @@ async function checkcomplete(id){
     }
 }
 
+// .then((data) => {
+//     if(data != null){
+//         duedates.innerHTML= ''
+//         data.forEach((todo) => {
+//             console.log(todo.id);
+//             console.log(todo.duedate);
+//             console.log(todo.description);
+//             todo.description = todo.description === undefined? '' : todo.description;
+//             const button = 
+//             `<li class="todo-item">
+//                 <button class="check count${todo.id}">
+//                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+//                     <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+//                     <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+//                     </svg>
+//                 </button>
+//                 <span>${todo.title}</span>
+//                 <div>${todo.description}</div>
+//             </li>`
+//             duedates.insertAdjacentHTML('beforeend', button)
+//         })
+//     }
+// })

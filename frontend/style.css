@@ -156,8 +156,13 @@ ul {
     
 }
 
+.due-date > div > ul > li > p {
+    color:rgb(77, 141, 143) ;
+    text-align: center;
+}
+
 .due-date > div:first-child > ul {
-    padding: 0 0 0 1em;
+    padding: 0 1em 0 1em;
 }
 
 .theme {
@@ -210,6 +215,7 @@ ul {
     border: none;
     background:none;
     padding-left: 0;
+    cursor: pointer;
 }
 
 .tick {
@@ -379,12 +385,13 @@ input {
     height: 3em;
     width: 6em;
     margin: 0 0.7em 0.7em 0;
+    cursor: pointer;
 }
 
 .cancel-enter > button:nth-of-type(2) {
     border: none;
-    outline: rgb(223, 74, 74);
-    background-color:rgb(223, 74, 74) ;
+    outline: rgba(223, 74, 74, 0.418);
+    background-color:rgba(223, 74, 74, 0.418) ;
     border-radius: 7px;
     >span {
         font-family: "Poppins", sans-serif;
@@ -393,9 +400,18 @@ input {
     height: 3em;
     width: 6em;
     margin:0 0.7em 0.7em 0 ;
+    cursor: pointer;
 }
 
 .hidebutton {
     display: none;
 }
 
+.click{
+    font-family: "Poppins", sans-serif;
+}
+
+.todo-item > div {
+    margin-left: 3em;
+    font-size: small;
+}

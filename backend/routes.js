@@ -1,6 +1,9 @@
 const express = require("express");
 const db = require("./db");
+const cors = require("cors");
 const router = express.Router();
+
+router.use(cors());
 
 router.get("/", (req, res) => {
     db.all("SELECT * FROM todos ORDER BY priority DESC", [], (err, rows) => {
@@ -11,19 +14,19 @@ router.get("/", (req, res) => {
 
 router.post("/", (req, res) => {
     
-    const {title, completed, priority, duedate} = req.body;
+    const {title, completed, priority, duedate, description} = req.body;
     console.log(req.body);
 
     if (!title || completed === undefined || priority === undefined) {
         return res.status(400).json({ error: "Missing required fields: title, completed, or priority" });
     }
-    db.run("INSERT INTO todos (title, completed, priority, duedate) VALUES (?, ?, ?, ?)",
-        [title, completed, priority, duedate],
+    db.run("INSERT INTO todos (title, completed, priority, duedate, description) VALUES (?, ?, ?, ?, ?)",
+        [title, completed, priority, duedate,description],
         function(err) {
             if(err) {
                 return res.status(500).json({error: err.message});
             }else {
-                return res.json({id: this.lastID, title, completed, priority});
+                return res.json({id: this.lastID, title, completed, priority, description});
             }
         })
 })

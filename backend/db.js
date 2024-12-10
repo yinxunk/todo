@@ -6,6 +6,8 @@ const db = new sqlite3.Database("./todos.db", (err) => {
 
 })
 
-db.run(`CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, completed BOOLEAN, priority INTEGER CHECK(priority >= 1 AND priority <= 4), duedate TEXT)`);
+
+
+db.run(`CREATE TABLE IF NOT EXISTS todos (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT, completed BOOLEAN, priority INTEGER CHECK(priority >= 1 AND priority <= 4), duedate TEXT, description TEXT)`);
 
 module.exports = db;

@@ -142,13 +142,7 @@ function toggleHide(){
     
 }
 
-function debounce() {
-    resizeTimeout = setTimeout(() => {
-        toggleHide();
-    }, 100)
-    clearTimeout(resizeTimeout);
-    
-}
+
 window.addEventListener("resize", toggleHide)
 //Frontend only
 //to hide sidebar
@@ -171,6 +165,17 @@ hidebutton.addEventListener("click", () => {
     
 })
 //to read sidebar
+const priobutton = document.querySelector('.category.two');
+priobutton.addEventListener('click', () => {
+    
+    const priocontainer = document.querySelector('.priority-container');
+    priocontainer.classList.toggle('hidden');
+    const priolevel = document.querySelectorAll('.priority-level');
+    priolevel.forEach(element => element.classList.toggle('hide'));
+    //REMEMBER HOW CLASSES IN CSS WORKS
+})
+
+
 
 hidebuttonmain.addEventListener("click", () => {
     const sidebar = document.querySelector(".sidebar.hidden")
@@ -255,7 +260,7 @@ async function insert(title, priority, duedate, description){
 
 todos()
 
-//add a todo
+//ADD A TODO
 localStorage.clear()
 let currentid = localStorage.getItem('counter')
     ? parseInt(localStorage.getItem('counter'),10)
@@ -284,7 +289,7 @@ add.addEventListener("click", () => {
         insert(addtaskinput.value, 4, date.value, addtaskdescription.value);
         
         const button = 
-        `<li class="todo-item">
+        `<li class="todo-item ${count}">
             <button class="check ${count}">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
                         <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
@@ -293,6 +298,7 @@ add.addEventListener("click", () => {
             </button>
             <span>${addtaskinput.value}</span>
             <div>${addtaskdescription.value}</div>
+            <p>${date.value}</p>
         </li>`
         const ul = document.querySelector(".todo-list");
         ul.insertAdjacentHTML('beforeend', button);
@@ -309,7 +315,7 @@ add.addEventListener("click", () => {
                 console.log(todo.description)
                 todo.description = todo.description === undefined? '' : todo.description;
                 const button = 
-                `<li class="todo-item">
+                `<li class="todo-item count${todo.id}">
                     <button class="check count${todo.id}">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
                         <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
@@ -318,12 +324,41 @@ add.addEventListener("click", () => {
                     </button>
                     <span>${todo.title}</span>
                     <div>${todo.description}</div>
+                    <p>${todo.duedate}</p>
                 </li>`
             ul.insertAdjacentHTML('beforeend', button);
             })
         })
+        const duedates = document.querySelector('.due-date > div > ul');
+        duedates.innerHTML = '';
+        getDate().then((data) => {
+    
+                duedates.innerHTML= ''
+                data.forEach((todo) => {
+                    console.log(todo.id);
+                    console.log(todo.duedate);
+                    console.log(todo.description);
+                    todo.description = todo.description === undefined? '' : todo.description;
+                    const button = 
+                    `<li class="todo-item count${todo.id}">
+                        <button class="check count${todo.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                            <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                            <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                            </svg>
+                        </button>
+                        <span>${todo.title}</span>
+                        <div>${todo.description}</div>
+                        <p>${todo.duedate}</p>
+                    </li>`
+                    duedates.insertAdjacentHTML('beforeend', button)
+                })
+            
+        }).catch((err) => {
+            console.log(err);
+        })
 })
-//list all todos
+//LIST ALL EXISTING TODOS
 
 async function todos() {
     try {
@@ -352,15 +387,19 @@ async function getDate() {
             throw new Error(`HTTP error! Status: ${response.status}`)
         }
         const data = await response.json();
+        
         data.forEach((todo, index) => {
             console.log(`Todo ${index + 1}:`, todo);
         });
+        return data;
         
     }catch(error){
         console.log(error);
     }
 }
 getDate();
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const ul = document.querySelector('.todo-list');
     todos().then((data) => {
@@ -370,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(todo.description);
             todo.description = todo.description === undefined? '' : todo.description;
             const button = 
-            `<li class="todo-item">
+            `<li class="todo-item count${todo.id}">
                 <button class="check count${todo.id}">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
                     <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
@@ -379,6 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </button>
                 <span>${todo.title}</span>
                 <div>${todo.description}</div>
+                <p>${todo.duedate}</p>
             </li>`
             ul.insertAdjacentHTML('beforeend', button);
         })
@@ -395,7 +435,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log(todo.description);
                 todo.description = todo.description === undefined? '' : todo.description;
                 const button = 
-                `<li class="todo-item">
+                `<li class="todo-item count${todo.id}">
                     <button class="check count${todo.id}">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
                         <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
@@ -404,11 +444,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     </button>
                     <span>${todo.title}</span>
                     <div>${todo.description}</div>
+                    <p>${todo.duedate}</p>
                 </li>`
                 duedates.insertAdjacentHTML('beforeend', button)
             })
         
+    }).catch((err) => {
+        console.log(err);
     })
+
+    
     
 })
 
@@ -435,20 +480,55 @@ ul.addEventListener('click', (e) => {
     if(e.target.closest('.check')) {
         const button = e.target.closest('.check');
         console.log(button);
+        console.log(button.classList)
         const buttonstring = button.className;
         console.log([button.classList]);
         const id = buttonstring.slice(11);
-        
         console.log(id);
         console.log(button.parentNode);
         checkcomplete(id);
         ushantbehere(id);
-        button.parentNode.remove();
+        const sameelement = document.querySelectorAll(`.todo-item.count${id}`);
+        sameelement.forEach(element => element.remove());
+        
 
 
     }
+    const uldate = document.querySelector('.due');
+    if(uldate.childElementCount === 0){
+        const li = document.createElement("li");
+        const p = document.createElement('p');
+        p.textContent = "No due dates"
+        li.appendChild(p);
+        uldate.appendChild(li);
+    }
 })
 
+const uldate = document.querySelector('.due');
+uldate.addEventListener('click', (e) => {
+
+    if(e.target.closest('.check')) {
+        const button = e.target.closest('.check');
+        console.log(button);
+        console.log(button.classList)
+        const buttonstring = button.className;
+        console.log([button.classList]);
+        const id = buttonstring.slice(11);
+        console.log(id);
+        console.log(button.parentNode);
+        checkcomplete(id);
+        ushantbehere(id);
+        const sameelement = document.querySelectorAll(`.todo-item.count${id}`);
+        sameelement.forEach(element => element.remove());
+        if(uldate.childElementCount === 0){
+            const li = document.createElement("li");
+            const p = document.createElement('p');
+            p.textContent = "No due dates"
+            li.appendChild(p);
+            uldate.appendChild(li);
+        }
+    }
+})
 //edit todos
 
 
@@ -494,3 +574,4 @@ async function checkcomplete(id){
 //         })
 //     }
 // })
+

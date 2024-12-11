@@ -354,7 +354,15 @@ input {
     outline: auto;
     outline-color: lightgray;
     border-radius: 7px;
+    height: 3em;
     
+}
+.category:hover{
+    background-color: #ccc;
+}
+
+.prio {
+    border: 1px solid lightgray !important;
 }
 
 .category > span {
@@ -416,6 +424,93 @@ input {
     font-size: small;
 }
 
+.todo-item > p {
+    font-size: small;
+    margin:0 0 0 3em;
+}
+
+
+input[type = "date"]{
+    padding: 0.7em;
+
+}
+input[type = "date"]:hover{
+    background-color: #ccc;
+}
+.todobutton {
+    position: relative;
+    margin: 20px;
+  }
+  
+  #priority-btn {
+    padding: 10px 10px;
+    background-color: #ffffff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  #priority-btn:hover{
+    background-color: #ccc;
+  }
+  
+  .priority-container {
+    position: absolute;
+    
+    top: 14%;
+    left: 100%; 
+    
+    background-color: #f1f1f1;
+    
+    border-radius: 20px;
+    padding: 2px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex: 1 1 138px ;
+    gap: 5px;
+    transition: 0.1s; 
+    
+    
+  }
+  .priority-container.hidden{
+    transition: 0.5s;
+    flex:0 0 0  ;
+    width: 0px;
+  }
+  
+  .priority-container.show {
+    left: 60px; 
+  }
+  
+  .priority-level {
+    padding: 5px 10px;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    border-radius: 20px;
+    text-align: left;
+  }
+  .priority-level.hide{
+    display: none;
+  }
+  
+  .priority-level:hover {
+    background-color: #ddd;
+  }
+
+  .add-overlay > div:first-of-type {
+    display: flex;
+    align-items: center;
+  }
+  .priority-level{
+    display: flex;
+  }
+
+ 
+  .category.two.clicked{
+    background-color: #ffffff;
+  }
+
 @media only screen and (max-width: 46em) {
     .dothingsapp{
         display: absolute;
@@ -453,6 +548,3 @@ input {
 
 }
 
-input[type = "date"]{
-    height: 2em;
-}

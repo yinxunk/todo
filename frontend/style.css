@@ -376,6 +376,9 @@ input {
     height: 100%;
 }
 
+.category:first-of-type{
+    padding: 0 0 0 0 ;
+}
 .cancel-enter{
     display: flex;
     justify-content: flex-end;
@@ -432,6 +435,7 @@ input {
 
 input[type = "date"]{
     padding: 0.7em;
+    
 
 }
 input[type = "date"]:hover{

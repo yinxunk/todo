@@ -175,6 +175,8 @@ priobutton.addEventListener('click', () => {
     //REMEMBER HOW CLASSES IN CSS WORKS
 })
 
+//
+
 
 
 hidebuttonmain.addEventListener("click", () => {
@@ -258,9 +260,49 @@ async function insert(title, priority, duedate, description){
     }
 }
 
-todos()
+
+
+let priority = 1;
+const prioritycontainer = document.querySelector('.priority-container');
+
+prioritycontainer.addEventListener('click', (e) => {
+    const button = e.target.closest('.priority-level');
+    if (button) { 
+        console.log(button);
+        console.log(button.classList);
+        
+        const exclamation = button.textContent.trim(); // Use trimmed text content for comparison
+        
+        switch (exclamation) {
+            case '!':
+                priority = 1;
+                break;
+            case '!!':
+                priority = 2;
+                break;
+            case '!!!':
+                priority = 3;
+                break;
+            case '!!!!':
+                priority = 4;
+                break;
+            default:
+                console.log("Unrecognized priority level");
+        }
+        
+        console.log(`Selected priority: ${priority}`);
+        console.log(button.parentNode);
+        const prioritybutton = document.querySelectorAll('.priority-level');
+        prioritybutton.forEach(button => button.style.backgroundColor ="white");
+        button.style.backgroundColor = 'beige';
+    } else {
+        console.log("No priority-level button clicked.");
+    }
+});
 
 //ADD A TODO
+
+
 localStorage.clear()
 let currentid = localStorage.getItem('counter')
     ? parseInt(localStorage.getItem('counter'),10)
@@ -274,7 +316,7 @@ addtaskinput.addEventListener('input', () => {
         add.style.backgroundColor = "rgba(223, 74, 74, 0.418)";
     }
 })
-add.addEventListener("click", () => {
+add.addEventListener("click", async () => { //async is needed so that await can be used
     currentid += 1;
     localStorage.setItem('counter', currentid);
     const count = `count${currentid}`;
@@ -286,7 +328,7 @@ add.addEventListener("click", () => {
     }
     else {
         console.log(date.value)
-        insert(addtaskinput.value, 4, date.value, addtaskdescription.value);
+        await insert(addtaskinput.value, priority, date.value, addtaskdescription.value);
         
         const button = 
         `<li class="todo-item ${count}">
@@ -309,7 +351,8 @@ add.addEventListener("click", () => {
         console.log(count)
     }
     ul.innerHTML = '';
-        todos().then((data) => {
+    
+         await todos().then((data) => {
             data.forEach((todo) => {
                 console.log(todo.id);
                 console.log(todo.description)
@@ -331,7 +374,8 @@ add.addEventListener("click", () => {
         })
         const duedates = document.querySelector('.due-date > div > ul');
         duedates.innerHTML = '';
-        getDate().then((data) => {
+        
+        await getDate().then((data) => {
     
                 duedates.innerHTML= ''
                 data.forEach((todo) => {
@@ -353,6 +397,13 @@ add.addEventListener("click", () => {
                     </li>`
                     duedates.insertAdjacentHTML('beforeend', button)
                 })
+                if(uldate.childElementCount === 0){
+                    const li = document.createElement("li");
+                    const p = document.createElement('p');
+                    p.textContent = "No due dates"
+                    li.appendChild(p);
+                    uldate.appendChild(li);
+                        }
             
         }).catch((err) => {
             console.log(err);
@@ -378,7 +429,7 @@ async function todos() {
     
     
 }
-todos()
+
 
 async function getDate() {
     try {
@@ -448,7 +499,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 </li>`
                 duedates.insertAdjacentHTML('beforeend', button)
             })
-        
+    if(uldate.childElementCount === 0){
+        const li = document.createElement("li");
+        const p = document.createElement('p');
+        p.textContent = "No due dates"
+        li.appendChild(p);
+        uldate.appendChild(li);
+            }
     }).catch((err) => {
         console.log(err);
     })
@@ -529,6 +586,8 @@ uldate.addEventListener('click', (e) => {
         }
     }
 })
+
+
 //edit todos
 
 

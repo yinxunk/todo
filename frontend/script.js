@@ -169,7 +169,7 @@ const priobutton = document.querySelector('.category.two');
 priobutton.addEventListener('click', () => {
     
     const priocontainer = document.querySelector('.priority-container');
-    priocontainer.classList.toggle('hidden');
+    priocontainer.classList.toggle('hidecontainer');
     const priolevel = document.querySelectorAll('.priority-level');
     priolevel.forEach(element => element.classList.toggle('hide'));
     //REMEMBER HOW CLASSES IN CSS WORKS
@@ -232,6 +232,12 @@ cancel.addEventListener("click", () => {
     const addoverlay = document.querySelector(".add-overlay");
     inneraddtask.classList.toggle("hidebutton");
     addoverlay.classList.toggle("hidebutton");
+    const priocontainer = document.querySelector('.priority-container');
+    priocontainer.setAttribute('class', 'priority-container hidecontainer');
+    const priolevel = document.querySelectorAll('.priority-level');
+    priolevel.forEach(element => element.setAttribute('class', 'priority-level hide '));
+    
+
 })
 
 

@@ -472,14 +472,16 @@ input[type = "date"]:hover{
     display: flex;
     flex: 1 1 138px ;
     gap: 5px;
-    transition: 0.1s; 
-    
+    transform: scaleX(1);
+    transition: transform 0.5s ease, opacity 0.5s ease, padding 0.5s ease;
+    opacity: 1;
     
   }
-  .priority-container.hidden{
-    transition: 0.5s;
-    flex:0 0 0  ;
-    width: 0px;
+  .priority-container.hidecontainer{
+    flex: 0 0 0 ;
+    transform: scaleX(0);
+    opacity: 0;
+    padding: 0;
   }
   
   .priority-container.show {

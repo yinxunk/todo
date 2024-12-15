@@ -1,14 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
+:root {
+    --blue: rgb(77, 141, 143);
+    --red: rgba(223, 74, 74, 0.418);
+    --white: #ffffff;
+    --beige: #ccc;
+    --poppins:"Poppins", sans-serif;
+}
 html{
     height: auot;
-    font-family: "Poppins", sans-serif;
+    font-family: var(--poppins);
 }
 body{
     
     margin: 0;
     height: auot;
 }
+
 
 .dothingsapp {
     display: flex;
@@ -60,7 +68,7 @@ body{
 }
 
 .sidebar-content{
-    width: 100%;
+    max-width: 100%;
     padding: 0;
 }
 
@@ -105,12 +113,12 @@ body{
 }
 .sidebutton span{
     padding-top: 0.25em;
-    font-family: "Poppins", sans-serif;
+    font-family: var(--poppins);
     font-size: 20px;
 }
 
 .add-Task .sidebutton span {
-    font-family: "Poppins", sans-serif;
+    font-family: var(--poppins);
     font-weight: 600;
     font-style: normal;
 }
@@ -144,12 +152,15 @@ ul {
     
 }
 
+.due-date{
+    max-width :277px;
+}
 .due-date > div:first-child > div {
     text-align: center;
     margin-top: 2em;
     > span {
-        color: rgb(77, 141, 143);
-        font-family: "Poppins", sans-serif;
+        color: var(--blue);
+        font-family: var(--poppins);
         font-weight: 600;
         font-style: normal;
     }
@@ -157,7 +168,7 @@ ul {
 }
 
 .due-date > div > ul > li > p {
-    color:rgb(77, 141, 143) ;
+    color:var(--blue) ;
     text-align: center;
 }
 
@@ -184,7 +195,7 @@ ul {
     border: none;
     background: none;
     > span {
-        font-family: "Poppins", sans-serif;
+        font-family: var(--poppins);
         
         display: flex;
         height: 100%;
@@ -202,12 +213,12 @@ ul {
 }
 
 .add-activity:hover span{
-    color: rgb(77, 141, 143);
+    color: var(--blue);
     
 }
 
 .add-activity:hover svg > path {
-    fill: rgb(77, 141, 143);
+    fill: var(--blue);
     
 }
 
@@ -216,6 +227,7 @@ ul {
     background:none;
     padding-left: 0;
     cursor: pointer;
+    
 }
 
 .tick {
@@ -235,9 +247,79 @@ ul {
     border-bottom: 1px solid lightgrey;
     width: 95%;
     padding-top: 0.7em;
+   
+    
+}
+.todo-item > div:first-of-type{
+    margin-left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    >button:nth-of-type(2) {
+        border: none;
+        background:none;
+        padding: 0;
+        cursor: pointer;
+        margin-left: auto;
+        
+    }
+
 }
 
+.description{
+    padding: 0 0 0 3em;
+    overflow: hidden;
+    max-width: 80%;
+    
+}
+.description:hover{
+    overflow: auto;
+}
+.edit{
+    box-shadow: 0 0 5px grey ;
+    border-radius: 5px;
+    background-color: var(--white);
+    position: absolute;
+    top: 2.3em;
+    left:92%;
+    >ul{
+        padding: 0 3em 0 3em;
+    }
+    > ul > li > button{
+        display: flex;
+        border: none;
+        background:none;
+        padding: 0;
+        cursor: pointer;
+        align-items: center;
+        >span{
+            font-family: var(--poppins);
+        }
 
+    }
+    >ul {
+        padding: 1em 1em 1em 1em;
+        >li:hover{
+            background-color: #ccc;
+        }
+        >li {
+            border-radius: 5px;
+            
+        }
+        
+    }
+    
+    
+    
+}
+
+.maintodo > button:nth-of-type(2) > svg:hover{
+    background-color: #ccc;
+}
+.maintodo > button:nth-of-type(2) > svg{
+    border-radius: 4px;
+}
 /*search box*/
 
 .search-overlay {
@@ -298,7 +380,7 @@ ul {
 
 }
 
-.Recently {
+.Recently > div {
     font-size: 12px;
     color: grey;
     padding: 0.7em 0 0.7em 0.7em;
@@ -345,7 +427,7 @@ input {
     height:2em;
     font-size: 1em;
     font-weight: bold;
-    font-family: "Poppins", sans-serif;
+    font-family: var(--poppins);
     margin-top:0.3em;
 }
 .category {
@@ -358,7 +440,7 @@ input {
     
 }
 .category:hover{
-    background-color: #ccc;
+    background-color: var(--beige);
 }
 
 .prio {
@@ -390,7 +472,7 @@ input {
     outline: grey;
     border-radius: 7px;
     >span {
-        font-family: "Poppins", sans-serif;
+        font-family: var(--poppins);
         font-weight:600;
     }
     height: 3em;
@@ -401,11 +483,11 @@ input {
 
 .cancel-enter > button:nth-of-type(2) {
     border: none;
-    outline: rgba(223, 74, 74, 0.418);
-    background-color:rgba(223, 74, 74, 0.418) ;
+    outline: var(--red);
+    background-color:var(--red) ;
     border-radius: 7px;
     >span {
-        font-family: "Poppins", sans-serif;
+        font-family: var(--poppins);
         font-weight:600;
     }
     height: 3em;
@@ -419,7 +501,7 @@ input {
 }
 
 .click{
-    font-family: "Poppins", sans-serif;
+    font-family: var(--poppins);
 }
 
 .todo-item > div {
@@ -439,7 +521,7 @@ input[type = "date"]{
 
 }
 input[type = "date"]:hover{
-    background-color: #ccc;
+    background-color: var(--beige);
 }
 .todobutton {
     position: relative;
@@ -448,14 +530,14 @@ input[type = "date"]:hover{
   
   #priority-btn {
     padding: 10px 10px;
-    background-color: #ffffff;
+    background-color: var(--white);
     color: white;
     border: none;
     cursor: pointer;
     border-radius: 5px;
   }
   #priority-btn:hover{
-    background-color: #ccc;
+    background-color: var(--beige);
   }
   
   .priority-container {
@@ -490,8 +572,8 @@ input[type = "date"]:hover{
   
   .priority-level {
     padding: 5px 10px;
-    background-color: #ffffff;
-    border: 1px solid #ccc;
+    background-color: var(--white);
+    border: 1px solid var(--beige);
     cursor: pointer;
     border-radius: 20px;
     text-align: left;
@@ -514,7 +596,7 @@ input[type = "date"]:hover{
 
  
   .category.two.clicked{
-    background-color: #ffffff;
+    background-color: var(--white);
   }
 
 @media only screen and (max-width: 46em) {

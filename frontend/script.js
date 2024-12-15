@@ -1,5 +1,7 @@
 //tests for functionality of routes
 
+// const { query } = require("express");
+
 // async function todos() {
 //     try {
 //         const response = await fetch(`http://localhost:3000/todos`);
@@ -338,13 +340,24 @@ add.addEventListener("click", async () => { //async is needed so that await can 
         
         const button = 
         `<li class="todo-item ${count}">
-            <button class="check ${count}">
-                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
-                        <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-                        <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
-                </svg>
-            </button>
-            <span>${addtaskinput.value}</span>
+            <div class = 'maintodo'>
+                        <button class="check ${count}">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                            <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                            <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                            </svg>
+                        </button>
+                        <span>${addtaskinput.title}</span>
+                        <button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M249.23-420q-24.75 0-42.37-17.63-17.63-17.62-17.63-42.37 0-24.75 17.63-42.37Q224.48-540 249.23-540q24.75 0 42.38 17.63 17.62 17.62 17.62 42.37 0 24.75-17.62 42.37Q273.98-420 249.23-420ZM480-420q-24.75 0-42.37-17.63Q420-455.25 420-480q0-24.75 17.63-42.37Q455.25-540 480-540q24.75 0 42.37 17.63Q540-504.75 540-480q0 24.75-17.63 42.37Q504.75-420 480-420Zm230.77 0q-24.75 0-42.38-17.63-17.62-17.62-17.62-42.37 0-24.75 17.62-42.37Q686.02-540 710.77-540q24.75 0 42.37 17.63 17.63 17.62 17.63 42.37 0 24.75-17.63 42.37Q735.52-420 710.77-420Z"/></svg></button>
+                        <div class = 'edit hide'>
+                            <ul>
+                                <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M200-200h50.46l409.46-409.46-50.46-50.46L200-250.46V-200Zm-60 60v-135.38l527.62-527.39q9.07-8.24 20.03-12.73 10.97-4.5 23-4.5t23.3 4.27q11.28 4.27 19.97 13.58l48.85 49.46q9.31 8.69 13.27 20 3.96 11.31 3.96 22.62 0 12.07-4.12 23.03-4.12 10.97-13.11 20.04L275.38-140H140Zm620.38-570.15-50.23-50.23 50.23 50.23Zm-126.13 75.9-24.79-25.67 50.46 50.46-25.67-24.79Z"/></svg><span>Edit</span></button></li>
+                                <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M226.89-126.15q-25.75 0-43.55-17.8-17.8-17.8-17.8-43.56v-506.21q0-25.76 17.8-43.56t43.74-17.8h73.84v-89.23h40v89.23h281.23v-89.23h36.93v89.23h73.84q25.94 0 43.74 17.8t17.8 43.56v506.21q0 25.76-17.8 43.56t-43.55 17.8H226.89Zm.19-36.93h505.84q9.23 0 16.93-7.69 7.69-7.69 7.69-16.92v-346.46H202.46v346.46q0 9.23 7.69 16.92 7.7 7.69 16.93 7.69Zm-24.62-408h555.08v-122.46q0-9.23-7.69-16.92-7.7-7.69-16.93-7.69H227.08q-9.23 0-16.93 7.69-7.69 7.69-7.69 16.92v122.46Zm0 0v-147.07 147.07Zm277.59 176.62q-12.32 0-21.26-8.89-8.94-8.89-8.94-21.21t8.89-21.27q8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.27q-8.89 8.94-21.21 8.94Zm-160 0q-12.32 0-21.26-8.89-8.94-8.89-8.94-21.21t8.89-21.27q8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.27q-8.89 8.94-21.21 8.94Zm320 0q-12.32 0-21.26-8.89-8.94-8.89-8.94-21.21t8.89-21.27q8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.27q-8.89 8.94-21.21 8.94Zm-160 153.84q-12.32 0-21.26-8.89-8.94-8.88-8.94-21.21 0-12.32 8.89-21.26 8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.26q-8.89 8.94-21.21 8.94Zm-160 0q-12.32 0-21.26-8.89-8.94-8.88-8.94-21.21 0-12.32 8.89-21.26 8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.26q-8.89 8.94-21.21 8.94Zm320 0q-12.32 0-21.26-8.89-8.94-8.88-8.94-21.21 0-12.32 8.89-21.26 8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.26q-8.89 8.94-21.21 8.94Z"/></svg><span>Date</span></button></li>
+                                <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg><span>Priority</span></button></li>
+                                <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M292.31-140q-29.92 0-51.12-21.19Q220-182.39 220-212.31V-720h-40v-60h180v-35.38h240V-780h180v60h-40v507.69Q740-182 719-161q-21 21-51.31 21H292.31ZM680-720H280v507.69q0 5.39 3.46 8.85t8.85 3.46h375.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-720ZM376.16-280h59.99v-360h-59.99v360Zm147.69 0h59.99v-360h-59.99v360ZM280-720v520-520Z"/></svg><span>Delete</span></button></li>
+                            </ul>
+                    </div>
+                    </div>
             <div>${addtaskdescription.value}</div>
             <p>${date.value}</p>
         </li>`
@@ -355,6 +368,7 @@ add.addEventListener("click", async () => { //async is needed so that await can 
         date.value = '';
     
         console.log(count)
+        
     }
     ul.innerHTML = '';
     
@@ -365,17 +379,29 @@ add.addEventListener("click", async () => { //async is needed so that await can 
                 todo.description = todo.description === undefined? '' : todo.description;
                 const button = 
                 `<li class="todo-item count${todo.id}">
-                    <button class="check count${todo.id}">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
-                        <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-                        <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
-                        </svg>
-                    </button>
-                    <span>${todo.title}</span>
+                    <div class = 'maintodo'>
+                        <button class="check count${todo.id}">
+                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                            <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                            <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                            </svg>
+                        </button>
+                        <span>${todo.title}</span>
+                        <button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M249.23-420q-24.75 0-42.37-17.63-17.63-17.62-17.63-42.37 0-24.75 17.63-42.37Q224.48-540 249.23-540q24.75 0 42.38 17.63 17.62 17.62 17.62 42.37 0 24.75-17.62 42.37Q273.98-420 249.23-420ZM480-420q-24.75 0-42.37-17.63Q420-455.25 420-480q0-24.75 17.63-42.37Q455.25-540 480-540q24.75 0 42.37 17.63Q540-504.75 540-480q0 24.75-17.63 42.37Q504.75-420 480-420Zm230.77 0q-24.75 0-42.38-17.63-17.62-17.62-17.62-42.37 0-24.75 17.62-42.37Q686.02-540 710.77-540q24.75 0 42.37 17.63 17.63 17.62 17.63 42.37 0 24.75-17.63 42.37Q735.52-420 710.77-420Z"/></svg></button>
+                        <div class = 'edit hide'>
+                            <ul>
+                                <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M200-200h50.46l409.46-409.46-50.46-50.46L200-250.46V-200Zm-60 60v-135.38l527.62-527.39q9.07-8.24 20.03-12.73 10.97-4.5 23-4.5t23.3 4.27q11.28 4.27 19.97 13.58l48.85 49.46q9.31 8.69 13.27 20 3.96 11.31 3.96 22.62 0 12.07-4.12 23.03-4.12 10.97-13.11 20.04L275.38-140H140Zm620.38-570.15-50.23-50.23 50.23 50.23Zm-126.13 75.9-24.79-25.67 50.46 50.46-25.67-24.79Z"/></svg><span>Edit</span></button></li>
+                                <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M226.89-126.15q-25.75 0-43.55-17.8-17.8-17.8-17.8-43.56v-506.21q0-25.76 17.8-43.56t43.74-17.8h73.84v-89.23h40v89.23h281.23v-89.23h36.93v89.23h73.84q25.94 0 43.74 17.8t17.8 43.56v506.21q0 25.76-17.8 43.56t-43.55 17.8H226.89Zm.19-36.93h505.84q9.23 0 16.93-7.69 7.69-7.69 7.69-16.92v-346.46H202.46v346.46q0 9.23 7.69 16.92 7.7 7.69 16.93 7.69Zm-24.62-408h555.08v-122.46q0-9.23-7.69-16.92-7.7-7.69-16.93-7.69H227.08q-9.23 0-16.93 7.69-7.69 7.69-7.69 16.92v122.46Zm0 0v-147.07 147.07Zm277.59 176.62q-12.32 0-21.26-8.89-8.94-8.89-8.94-21.21t8.89-21.27q8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.27q-8.89 8.94-21.21 8.94Zm-160 0q-12.32 0-21.26-8.89-8.94-8.89-8.94-21.21t8.89-21.27q8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.27q-8.89 8.94-21.21 8.94Zm320 0q-12.32 0-21.26-8.89-8.94-8.89-8.94-21.21t8.89-21.27q8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.27q-8.89 8.94-21.21 8.94Zm-160 153.84q-12.32 0-21.26-8.89-8.94-8.88-8.94-21.21 0-12.32 8.89-21.26 8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.26q-8.89 8.94-21.21 8.94Zm-160 0q-12.32 0-21.26-8.89-8.94-8.88-8.94-21.21 0-12.32 8.89-21.26 8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.26q-8.89 8.94-21.21 8.94Zm320 0q-12.32 0-21.26-8.89-8.94-8.88-8.94-21.21 0-12.32 8.89-21.26 8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.26q-8.89 8.94-21.21 8.94Z"/></svg><span>Date</span></button></li>
+                                <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg><span>Priority</span></button></li>
+                                <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M292.31-140q-29.92 0-51.12-21.19Q220-182.39 220-212.31V-720h-40v-60h180v-35.38h240V-780h180v60h-40v507.69Q740-182 719-161q-21 21-51.31 21H292.31ZM680-720H280v507.69q0 5.39 3.46 8.85t8.85 3.46h375.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-720ZM376.16-280h59.99v-360h-59.99v360Zm147.69 0h59.99v-360h-59.99v360ZM280-720v520-520Z"/></svg><span>Delete</span></button></li>
+                            </ul>
+                    </div>
+                    </div>
                     <div>${todo.description}</div>
                     <p>${todo.duedate}</p>
                 </li>`
-            ul.insertAdjacentHTML('beforeend', button);
+                ul.insertAdjacentHTML('beforeend', button);
+            
             })
         })
         const duedates = document.querySelector('.due-date > div > ul');
@@ -398,7 +424,7 @@ add.addEventListener("click", async () => { //async is needed so that await can 
                             </svg>
                         </button>
                         <span>${todo.title}</span>
-                        <div>${todo.description}</div>
+                        <div class ='description'>${todo.description}</div>
                         <p>${todo.duedate}</p>
                     </li>`
                     duedates.insertAdjacentHTML('beforeend', button)
@@ -467,17 +493,29 @@ document.addEventListener('DOMContentLoaded', () => {
             todo.description = todo.description === undefined? '' : todo.description;
             const button = 
             `<li class="todo-item count${todo.id}">
-                <button class="check count${todo.id}">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
-                    <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-                    <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
-                    </svg>
-                </button>
-                <span>${todo.title}</span>
+                <div class = 'maintodo'>
+                    <button class="check count${todo.id}">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                        <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                        <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                        </svg>
+                    </button>
+                    <span>${todo.title}</span>
+                    <button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M249.23-420q-24.75 0-42.37-17.63-17.63-17.62-17.63-42.37 0-24.75 17.63-42.37Q224.48-540 249.23-540q24.75 0 42.38 17.63 17.62 17.62 17.62 42.37 0 24.75-17.62 42.37Q273.98-420 249.23-420ZM480-420q-24.75 0-42.37-17.63Q420-455.25 420-480q0-24.75 17.63-42.37Q455.25-540 480-540q24.75 0 42.37 17.63Q540-504.75 540-480q0 24.75-17.63 42.37Q504.75-420 480-420Zm230.77 0q-24.75 0-42.38-17.63-17.62-17.62-17.62-42.37 0-24.75 17.62-42.37Q686.02-540 710.77-540q24.75 0 42.37 17.63 17.63 17.62 17.63 42.37 0 24.75-17.63 42.37Q735.52-420 710.77-420Z"/></svg></button>
+                    <div class = 'edit hide'>
+                        <ul>
+                            <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M200-200h50.46l409.46-409.46-50.46-50.46L200-250.46V-200Zm-60 60v-135.38l527.62-527.39q9.07-8.24 20.03-12.73 10.97-4.5 23-4.5t23.3 4.27q11.28 4.27 19.97 13.58l48.85 49.46q9.31 8.69 13.27 20 3.96 11.31 3.96 22.62 0 12.07-4.12 23.03-4.12 10.97-13.11 20.04L275.38-140H140Zm620.38-570.15-50.23-50.23 50.23 50.23Zm-126.13 75.9-24.79-25.67 50.46 50.46-25.67-24.79Z"/></svg><span>Edit</span></button></li>
+                            <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M226.89-126.15q-25.75 0-43.55-17.8-17.8-17.8-17.8-43.56v-506.21q0-25.76 17.8-43.56t43.74-17.8h73.84v-89.23h40v89.23h281.23v-89.23h36.93v89.23h73.84q25.94 0 43.74 17.8t17.8 43.56v506.21q0 25.76-17.8 43.56t-43.55 17.8H226.89Zm.19-36.93h505.84q9.23 0 16.93-7.69 7.69-7.69 7.69-16.92v-346.46H202.46v346.46q0 9.23 7.69 16.92 7.7 7.69 16.93 7.69Zm-24.62-408h555.08v-122.46q0-9.23-7.69-16.92-7.7-7.69-16.93-7.69H227.08q-9.23 0-16.93 7.69-7.69 7.69-7.69 16.92v122.46Zm0 0v-147.07 147.07Zm277.59 176.62q-12.32 0-21.26-8.89-8.94-8.89-8.94-21.21t8.89-21.27q8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.27q-8.89 8.94-21.21 8.94Zm-160 0q-12.32 0-21.26-8.89-8.94-8.89-8.94-21.21t8.89-21.27q8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.27q-8.89 8.94-21.21 8.94Zm320 0q-12.32 0-21.26-8.89-8.94-8.89-8.94-21.21t8.89-21.27q8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.27q-8.89 8.94-21.21 8.94Zm-160 153.84q-12.32 0-21.26-8.89-8.94-8.88-8.94-21.21 0-12.32 8.89-21.26 8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.26q-8.89 8.94-21.21 8.94Zm-160 0q-12.32 0-21.26-8.89-8.94-8.88-8.94-21.21 0-12.32 8.89-21.26 8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.26q-8.89 8.94-21.21 8.94Zm320 0q-12.32 0-21.26-8.89-8.94-8.88-8.94-21.21 0-12.32 8.89-21.26 8.89-8.94 21.21-8.94t21.26 8.89q8.94 8.89 8.94 21.21t-8.89 21.26q-8.89 8.94-21.21 8.94Z"/></svg><span>Date</span></button></li>
+                            <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg><span>Priority</span></button></li>
+                            <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M292.31-140q-29.92 0-51.12-21.19Q220-182.39 220-212.31V-720h-40v-60h180v-35.38h240V-780h180v60h-40v507.69Q740-182 719-161q-21 21-51.31 21H292.31ZM680-720H280v507.69q0 5.39 3.46 8.85t8.85 3.46h375.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-720ZM376.16-280h59.99v-360h-59.99v360Zm147.69 0h59.99v-360h-59.99v360ZM280-720v520-520Z"/></svg><span>Delete</span></button></li>
+                        </ul>
+                    </div>
+                </div>
                 <div>${todo.description}</div>
                 <p>${todo.duedate}</p>
             </li>`
             ul.insertAdjacentHTML('beforeend', button);
+            
         })
     }).catch((err) => {
         console.log(err);
@@ -500,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </svg>
                     </button>
                     <span>${todo.title}</span>
-                    <div>${todo.description}</div>
+                    <div class ='description'>${todo.description}</div>
                     <p>${todo.duedate}</p>
                 </li>`
                 duedates.insertAdjacentHTML('beforeend', button)
@@ -616,27 +654,119 @@ async function checkcomplete(id){
     }
 }
 
-// .then((data) => {
-//     if(data != null){
-//         duedates.innerHTML= ''
-//         data.forEach((todo) => {
-//             console.log(todo.id);
-//             console.log(todo.duedate);
-//             console.log(todo.description);
-//             todo.description = todo.description === undefined? '' : todo.description;
-//             const button = 
-//             `<li class="todo-item">
-//                 <button class="check count${todo.id}">
-//                     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
-//                     <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
-//                     <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
-//                     </svg>
-//                 </button>
-//                 <span>${todo.title}</span>
-//                 <div>${todo.description}</div>
-//             </li>`
-//             duedates.insertAdjacentHTML('beforeend', button)
-//         })
+//search function
+function displaysearch(matches){
+    const recentsearch = document.querySelector('.Recently > ul');
+    recentsearch.innerHTML = '';
+    if(matches.length === 0){
+        const li = document.createElement('li');
+        const p =  document.createElement('p');
+        p.textContent = 'No todos to be searched'
+        li.appendChild(p);
+        recentsearch.appendChild(li);
+
+    }
+    else {
+        matches.forEach(todo => {
+            const li =  `<li class="todo-item count${todo.id}">
+            <button class="check count${todo.id}">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                </svg>
+            </button>
+            <span>${todo.title}</span>
+        </li>`
+            recentsearch.insertAdjacentHTML('beforeend', li)
+        })
+    }
+}
+
+const search = document.querySelector('.search > input');
+search.addEventListener('input', () =>{
+    const query = search.value.toLowerCase();
+    const label = document.querySelector('.Recently > div');
+    if(query != ''){
+        label.style.display = 'none';
+        todos().then((todo) => {
+            const todotitles = [];
+            todo.forEach((todo) => todotitles.push(todo.title));
+            const matches = todo.filter(item => item.title.toLowerCase().includes(query));
+            displaysearch(matches);
+            console.log(matches)
+        })
+    }
+    else{
+        label.style.display = 'block'
+        const recentsearch = document.querySelector('.Recently > ul');
+        recentsearch.innerHTML = '';
+
+    }
+})
+
+const searchlist = document.querySelector('.recentsearch');
+searchlist.addEventListener('click', () =>{
+    
+}) 
+
+document.querySelector('.todo-list').addEventListener('click', (e) => {
+    if (e.target.closest('.maintodo > button:nth-of-type(2)')) {
+        const main = e.target.closest('.maintodo');
+        console.log(main);
+        if (main) {
+            const editmenu = main.querySelector('.edit');
+            console.log(editmenu);
+            editmenu.classList.toggle('hide');
+            editmenu.style.zIndex = '10000';
+        }
+    }
+});
+
+
+document.addEventListener('click', function(e) {
+    const editMenu = this.documentElement.querySelectorAll('.edit');
+    console.log(editMenu);
+    const mainTodo = e.target.closest('.maintodo');
+    console.log(mainTodo)
+
+    
+    if(!mainTodo || !mainTodo.contains(e.target)) {
+        editMenu.forEach(item => {
+            if(item && !item.contains(e.target)){
+                item.classList.add('hide');
+            }
+        })
+    }
+})
+
+// document.addEventListener('click', function(e) {
+    
+//     const editMenu = e.target.closest('.edit');
+    
+//     console.log(editMenu);
+
+   
+//     if(editMenu.contains(e.target)){
+//         editMenu.classList.add('hide');
 //     }
+    
 // })
 
+// document.addEventListener('click', function(e) {
+//     // Find the closest `.maintodo` to the clicked element
+//     const mainTodo = e.target.closest('.maintodo');
+
+//     // Close all edit menus first
+//     document.querySelectorAll('.edit').forEach(edit => {
+//         edit.classList.add('hide');
+//     });
+
+//     // If the click happened inside a `.maintodo`
+//     if (mainTodo) {
+//         const editMenu = mainTodo.querySelector('.edit');
+//         if (editMenu && mainTodo.contains(e.target)) {
+//             // Toggle visibility of the specific edit menu
+//             editMenu.classList.toggle('hide');
+//         }
+//     }
+// });

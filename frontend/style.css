@@ -256,13 +256,16 @@ ul {
     display: flex;
     align-items: center;
     position: relative;
-    >button:nth-of-type(2) {
-        border: none;
+    
+    >div:first-of-type{
+        margin-left: auto;
+        >button {
+            border: none;
         background:none;
         padding: 0;
         cursor: pointer;
         margin-left: auto;
-        
+        }
     }
 
 }
@@ -300,11 +303,18 @@ ul {
     }
     >ul {
         padding: 1em 1em 1em 1em;
-        >li:hover{
-            background-color: #ccc;
-        }
+        
         >li {
             border-radius: 5px;
+            display: flex;
+            gap: 1em    ;
+            >button:hover{
+                background-color: #ccc;
+            }
+            >button{
+                width: 100%;
+                border-radius: 5px;
+            }
             
         }
         

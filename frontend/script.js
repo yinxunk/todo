@@ -203,13 +203,13 @@ hidebuttonmain.addEventListener("click", () => {
 const overlay = document.querySelector(".search-overlay");
 const addTaskButton = document.querySelector(".sidebutton.add");
 addTaskButton.addEventListener("click", () =>{
-    overlay.style.display = "block";
+    overlay.classList.add('active');
     
 })
 
 overlay.addEventListener('click', (event)=>{
     if(event.target === overlay){
-        overlay.style.display = "none";
+        overlay.classList.remove('active');
     }
 })
 

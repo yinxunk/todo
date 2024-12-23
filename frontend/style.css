@@ -340,9 +340,17 @@ ul {
     padding-top: 10em;
     padding-left: 20%;
     z-index: 1000;
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition:opacity 0.3s ease, visibility 0.3s ease;
     
     
+    
+}
+
+.search-overlay.active{
+    visibility: visible;
+    opacity: 1;
     
 }
 

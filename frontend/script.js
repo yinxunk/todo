@@ -1188,3 +1188,40 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
         })
 })
 
+const checkbox = document.querySelector('.checkbox');
+const checkboxedit = document.querySelector('.checkboxedit');
+checkbox.addEventListener('click', function(){
+    checkbox.classList.add('hide');
+    checkboxedit.classList.add('active');
+})
+
+const canceledit = document.querySelector('.cancel-enter-edit > button');
+canceledit.addEventListener('click', function(){
+    checkbox.classList.remove('hide');
+    checkboxedit.classList.remove('active');
+})
+
+const recentsearch = document.querySelector('.recentsearch');
+recentsearch.addEventListener('click' ,(e) =>{
+    const todoitem = e.target.closest('.todo-item');
+    if(todoitem){
+        const todoitemstring = todoitem.className;
+        const id = todoitemstring.slice(15);
+        const editoverlay = document.querySelector('.edit-overlay');
+        editoverlay.classList.add('active');
+        
+        
+    }
+})
+
+const editoverlay = document.querySelector('.edit-overlay');
+editoverlay.addEventListener('click', (e) =>{
+    console.log(e.target)
+    if(e.target !== '.edit-overlay'){
+        return
+    }
+    else if(e.target === '.edit-overlay.active'){
+        editoverlay.classList.remove('acitve');
+
+    }
+})

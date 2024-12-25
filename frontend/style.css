@@ -665,6 +665,195 @@ input[type = "date"]:hover{
     opacity: 1;
   }
   
+  .checkbox {
+    display: flex;
+    >button{
+        border: none;
+        background: none;
+        cursor: pointer;
+        padding-left: 0;
+    }
+    
+  }
+  .checkbox.hide{
+    display: none;
+  }
+  .checkbox:hover{
+    cursor: pointer;
+  }
+
+  .checkboxbutton:hover .tick {
+    opacity: 0.7;
+    transition: 0.5s;
+}
+.closebox {
+    display: flex;
+    justify-content: flex-end;
+    border-bottom: 1px solid lightgray;
+    height: 8%;
+    > button {
+        border: none;
+        background: none;
+        cursor: pointer;
+    }
+}
+.edit-overlay{
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    transition:opacity 0.3s ease, visibility 0.3s ease;
+    opacity: 0;
+    visibility: hidden;
+    z-index: -1;
+    background-color: #cccccc9d;
+}
+.edit-overlay.active{
+    opacity: 1;
+    visibility: visible;
+    z-index: 999;
+}
+.editbox{
+    width: 650px;
+    margin: auto;
+    height: 500px;
+    background-color: rgb(255, 255, 255);
+    margin-top: 5%;
+    border-radius: 10px;
+    
+}
+.editmaincontent{
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    height: 92%;
+}
+.editdescription{
+    background-color:beige ;
+    height: 100%;
+    border-bottom-right-radius: 10px;
+    padding: 15px 10px 0 10px;
+    box-sizing: border-box;
+    font-size: small;
+    font-weight: 600;
+    color: gray;
+}
+.edittitle{
+    padding-left: 3%;
+    position: relative;
+    
+}
+.editname{
+    font-weight:500;
+    font-size: 23px;
+}
+.descriptioncontent{
+    padding: 5px 5px 5px 5px;
+    border-bottom: 1px solid lightgray;
+    font-weight: 400;
+    color: black;
+    
+}
+#priorityedit{
+    padding-top: 15px;
+}
+
+.descriptioneditbutton{
+    width: 100%;
+    height: 25px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+
+}
+
+.descriptioneditbutton:hover{
+    background-color: rgb(218, 177, 177);
+}
+.editinput{
+    border: 1px solid lightgray;
+    border-radius: 5px;
+    width: 90%;
+    margin: auto;
+    height: 100%;
+    >input{
+        display: block;
+        width: 100%;
+        
+        padding: auto;
+        border: none;
+        background: none;
+        outline: none;
+        appearance: none ;
+        height: 40px;
+    }
+    >input:first-of-type{
+        font-weight:500;
+        font-size: 23px;
+    }
+
+}
+.checkedit {
+    padding-top: 23px;
+    display: flex;
+    height: 70%;
+}
+
+.cancel-enter-edit{
+    width: 90%;
+    display: flex;
+    justify-content: flex-end;
+    margin: auto;
+    padding: 15px 0 0 0;
+    >button:first-of-type{
+        border: #ccc;
+        background: #ccc;
+        cursor: pointer;
+        border-radius: 5px;
+        height: 40px;
+        width: 60px;
+        font-family: var(--poppins);
+
+    }
+    >button:last-of-type{
+        border: rgb(223, 74, 74);
+        background:rgb(223, 74, 74);
+        cursor: pointer;
+        border-radius: 5px;
+        margin-left: 2%;
+        height: 40px;
+        width: 60px;
+        font-family: var(--poppins);
+    }
+}
+.checkboxedit{
+    height: 50%;
+    position: absolute;
+    width: 90%;
+    padding-top: 2px;
+    display: none;
+    
+}
+.checkboxedit.active{
+    display: block;
+}
+
+.deleteedit{
+    margin-top: 290px;
+}
+.recentsearch .todo-item:hover{
+    cursor: pointer;
+    background-color: #ccc;
+    border-left: 4px solid var(--blue);
+    
+}
+
+.highlight{
+    width: 2px;
+    background-color: beige;
+    visibility: hidden;
+}
 
 @media only screen and (max-width: 46em) {
     .dothingsapp{

@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+:root {
+    --poppins:"Poppins", sans-serif;
+}
+body{
+    margin: 0;
+}
+
+main{
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    font-family: var(--poppins);
+}
+.title{
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: beige;
+}
+
+
+
+.loginbox{
+    display: flex;
+    flex-direction: column;
+}
+.registerbox{
+    display: flex;
+    flex-direction: column;
+    width: 60%;
+    height: 60%;
+    background-color:white ;
+    border-radius: 10px;
+}
+.loginregisterbox{
+    display: flex;
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    background-color:rgb(77, 141, 143) ;
+    
+
+}
+
+.logindetails{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0 3em 0 3em;
+    h2{
+        margin: 0 0 1em 0;
+    }
+    p {
+        margin: 1em 0 0.5em 0;
+        color: gray;
+    }
+    
+}
+
+.logininputs{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    input{
+        width: 100%;
+        margin: 1.5em 0 0 0;
+        height: 3em;
+        border: 1px solid lightgray;
+        font-family: inherit;
+        border-radius: 5px;
+
+    }
+
+}
+
+#Login{
+    background-color: rgb(77, 141, 143);
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    font-family: inherit;
+    color: white;
+    width: 100%;
+    height: 3em;
+}
+#Remember{
+    display: flex;
+    input{
+        height: 1em;
+        width: 1em;
+        margin: 0;
+    }
+    span{
+        padding-left: 0.5em;
+        font-size: 10px;
+        height: 20px;
+    }
+}
+.forgetremember{
+    width: 100%;
+    max-height: 2em;
+    display: flex;
+    flex-direction: row;
+    height: 4em;
+    justify-content: space-between;
+    margin: 1em 0 0 0;
+    
+}
+
+.forgetbutton{
+    height: 1em;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-decoration: underline;
+    padding: 0;
+    
+}
+
+#google{
+    margin: 1em 0 0 0;
+    border: none;
+    cursor: pointer;
+    border-radius: 2px;
+    font-family: inherit;
+    width: 100%;
+    height: 3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

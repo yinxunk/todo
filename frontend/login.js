@@ -56,10 +56,10 @@ const register = async() => {
     }
 }
 
-document.querySelector('#Register').addEventListener('click', () =>{
-    register();
-    console.log('hi');
-});
+// document.querySelector('#Register').addEventListener('click', () =>{
+//     register();
+//     console.log('hi');
+// });
 
 document.querySelector('#Login').addEventListener('click', () =>{
     login();

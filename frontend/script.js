@@ -1,102 +1,3 @@
-//tests for functionality of routes
-
-// const { query } = require("express");
-
-// async function todos() {
-//     try {
-//         const response = await fetch(`http://localhost:3000/todos`);
-//         if(!response.ok) {
-//             throw new Error(`HTTP error! Status: ${response.status}`)
-//         }
-//         const data = await response.json();
-//         data.forEach((todo, index) => {
-//             console.log(`Todo ${index + 1}:`, todo);
-//         });
-        
-//     }catch(error){
-//         console.log(error);
-//     }
-    
-    
-    
-    
-// }
-
-
-
-// async function insert(){
-//     try {
-//         const request = new Request("http://localhost:3000/todos", {
-//             method: "POST",
-//             headers: {"Content-Type" : "application/json"},
-//             body: JSON.stringify({title: "nothing to do", completed: false, priority: 4, duedate: "tomorrow"})
-//         });
-//         const response = await fetch(request);
-//         if(!response.ok){
-//             throw new Error(`HTTP error! Status: ${response.status}`);
-//         }
-//         const data = await response.json();
-//         console.log(data);
-//     }catch (error) {
-//         console.log(error);
-//     }
-// }
-
-
-
-// async function ushantbehere(){
-//     try{
-//         const request = new Request("http://localhost:3000/todos/1", {
-//             method:"DELETE"
-//         })
-//         const response = await fetch(request);
-//         if(!response.ok){
-//             throw new Error(`HTTP error! Status: ${response.status}`);
-//         }
-//         const data = await response.json();
-//         console.log(data);
-//     }catch (error){
-//         console.log(error);
-//     }
-// }
-
-// // todos();
-
-// async function checkcomplete(){
-//     try {
-//         const request= new Request("http://localhost:3000/todos/13", {
-//             method:"PUT",
-//             headers: {"Content-Type" : "application/json"},
-//             body: JSON.stringify({edit:"completed", value:true})
-//         });
-//         const response = await fetch(request);
-//         if(!response.ok){
-//             throw new Error(`HTTP error! Status: ${response.status}`);
-//         }
-//         const data = await response.json();
-//         console.log(data);
-//     }catch (error){
-//         console.log(error);
-//     }
-// }
-
-
-// async function deletecomplete(){
-//     try{
-//         const request = new Request("http://localhost:3000/todos/", {
-//             method:"DELETE"
-//         })
-//         const response = await fetch(request);
-//         if(!response.ok){
-//             throw new Error(`HTTP error! Status: ${response.status}`);
-//         }
-//         const data = await response.json();
-//         console.log(data);
-//     }catch (error){
-//         console.log(error);
-//     }
-// }
-
 const token = localStorage.getItem('token');
 console.log(token);
 function toggleHide(){
@@ -821,7 +722,7 @@ async function editTitle(id, name){
     try {
         const request= new Request(`http://localhost:3000/todos/${id}`, {
             method:"PUT",
-            headers: {"Content-Type" : "application/json", "Authentication" : `Bearer ${token}`},
+            headers: {"Content-Type" : "application/json", "Authorization" : `Bearer ${token}`},
             body: JSON.stringify({edit:"title", value:name})
         });
         const response = await fetch(request);
@@ -839,7 +740,7 @@ async function editDescription(id, description){
     try {
         const request= new Request(`http://localhost:3000/todos/${id}`, {
             method:"PUT",
-            headers: {"Content-Type" : "application/json", "Authentication" : `Bearer ${token}`},
+            headers: {"Content-Type" : "application/json", "Authorization" : `Bearer ${token}`},
             body: JSON.stringify({edit:"description", value:description})
         });
         const response = await fetch(request);
@@ -858,7 +759,7 @@ async function checkcomplete(id){
     try {
         const request= new Request(`http://localhost:3000/todos/${id}`, {
             method:"PUT",
-            headers: {"Content-Type" : "application/json", "Authentication" : `Bearer ${token}`},
+            headers: {"Content-Type" : "application/json", "Authorization" : `Bearer ${token}`},
             body: JSON.stringify({edit:"completed", value:true})
         });
         const response = await fetch(request);
@@ -876,7 +777,7 @@ async function editDate(id, date) {
     try{
         const request = new Request(`http://localhost:3000/todos/${id}`, {
             method:"PUT",
-            headers: {"Content-Type" : "application/json", "Authentication" : `Bearer ${token}`},
+            headers: {"Content-Type" : "application/json", "Authorization" : `Bearer ${token}`},
             body: JSON.stringify({edit:"duedate", value:date})
         });
         const response = await fetch(request);
@@ -894,7 +795,7 @@ async function editPriority(id, priority) {
     try{
         const request = new Request(`http://localhost:3000/todos/${id}`, {
             method:"PUT",
-            headers: {"Content-Type" : "application/json", "Authentication" : `Bearer ${token}`},
+            headers: {"Content-Type" : "application/json", "Authorization" : `Bearer ${token}`},
             body: JSON.stringify({edit:"priority", value:priority})
         });
         const response = await fetch(request);

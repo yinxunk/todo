@@ -97,21 +97,8 @@
 //     }
 // }
 
-
-// async function getAllTodos(){
-//     try{
-//         const response = fetch("http://localhost:3000/todos")
-//         if(!response.ok){
-//             throw new Error(`HTTP Error: ${response.status}`);
-//         }
-//         const data = await response.json();
-        
-//     }catch(error){
-//         console.log(error);
-//     }
-    
-// }
-
+const token = localStorage.getItem('token');
+console.log(token);
 function toggleHide(){
     const width = 46 * parseFloat(getComputedStyle(document.documentElement).fontSize);
     
@@ -254,7 +241,7 @@ async function insert(title, priority, duedate, description){
     try {
         const request = new Request("http://localhost:3000/todos", {
             method: "POST",
-            headers: {"Content-Type" : "application/json"},
+            headers: {"Content-Type" : "application/json", "Authorization": `Bearer ${token}`},
             body: JSON.stringify({title: title, completed: false, priority: priority, duedate: duedate, description:description, })
         });
         const response = await fetch(request);
@@ -303,8 +290,8 @@ prioritycontainer.addEventListener('click', (e) => {
         const prioritybutton = document.querySelectorAll('.add-overlay .priority-level');
         prioritybutton.forEach(button => button.style.backgroundColor ="white");
         button.style.backgroundColor = 'beige';
-        prioritycontainer.classList.add('hidecontainer');
-        priority = 1;
+        
+        
 
     } else {
         console.log("No priority-level button clicked.");
@@ -319,8 +306,9 @@ let currentid = localStorage.getItem('counter')
     ? parseInt(localStorage.getItem('counter'),10)
     : 0;
 
-const add = document.querySelector(".add-overlay> .cancel-enter > button:nth-of-type(2)");
-const addtaskinput = document.querySelector("#addtaskinput");
+const add = document.querySelector(".add-overlay > .cancel-enter > button:nth-of-type(2)");
+console.log(add);
+const addtaskinput = document.querySelector(".add-overlay #addtaskinput");
 addtaskinput.addEventListener('input', () => {
     add.style.backgroundColor = "rgb(223, 74, 74)"
     if(addtaskinput.value === ''){
@@ -333,9 +321,12 @@ add.addEventListener("click", async () => { //async is needed so that await can 
     currentid += 1;
     localStorage.setItem('counter', currentid);
     const count = `count${currentid}`;
-    const addtaskinput = document.querySelector('#addtaskinput');
-    const addtaskdescription = document.querySelector('#addtaskdescription');
-    const date = document.querySelector('.category > input');
+    const addtaskinput = document.querySelector('.add-overlay #addtaskinput');
+    const addtaskdescription = document.querySelector('.add-overlay #addtaskdescription');
+    const date = document.querySelector('.add-overlay .category > input');
+    console.log(addtaskinput.value);
+    console.log(addtaskdescription.value)
+    console.log(date.value)
     if(addtaskinput.value === ''){
         return
     }
@@ -369,7 +360,7 @@ add.addEventListener("click", async () => { //async is needed so that await can 
                             </ul>
                     </div>
                     </div>
-            <div>${addtaskdescription.value}</div>
+            <div id = "description">${addtaskdescription.value}</div>
             <p>${date.value}</p>
         </li>`
         const ul = document.querySelector(".todo-list");
@@ -415,7 +406,7 @@ add.addEventListener("click", async () => { //async is needed so that await can 
                             </ul>
                     </div>
                     </div>
-                    <div>${todo.description}</div>
+                    <div id = "description">${todo.description}</div>
                     <p>${todo.duedate}</p>
                 </li>`
                 
@@ -480,7 +471,14 @@ add.addEventListener("click", async () => { //async is needed so that await can 
 
 async function todos() {
     try {
-        const response = await fetch(`http://localhost:3000/todos`);
+        const request = new Request(`http://localhost:3000/todos`, {
+            method:'GET',
+            headers : {
+                "Authorization": `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        const response = await fetch(request);
         if(!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`)
         }
@@ -497,10 +495,37 @@ async function todos() {
     
 }
 
+async function getSpecificTodo(id){
+    try{
+        const request = new Request(`http://localhost:3000/todos/${id}`, {
+            method:'GET',
+            headers : {
+                "Authorization": `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        const response = await fetch(request);
+        if(!response.ok){
+            throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+        const data = await response.json();
+        console.log(data);
+        return data
+    }catch(error){
+        console.log(error);
+    }
+}
 
 async function getDate() {
     try {
-        const response = await fetch(`http://localhost:3000/todos/date`);
+        const request = new Request(`http://localhost:3000/todos/date`, {
+            method:'GET',
+            headers : {
+                "Authorization": `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        const response = await fetch(request);
         if(!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`)
         }
@@ -552,7 +577,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         </ul>
                     </div>
                 </div>
-                <div>${todo.description}</div>
+                <div id = "description">${todo.description}</div>
                 <p>${todo.duedate}</p>
             </li>`
             ul.insertAdjacentHTML('beforeend', button);
@@ -619,7 +644,11 @@ document.addEventListener('DOMContentLoaded', () => {
 async function ushantbehere(id){
     try{
         const request = new Request(`http://localhost:3000/todos/${id}`, {
-            method:"DELETE"
+            method:"DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "content-Type": "application/json"
+            }
         })
         const response = await fetch(request);
         if(!response.ok){
@@ -788,13 +817,48 @@ uldate.addEventListener('click', (e) => {
 //edit todos
 
 
+async function editTitle(id, name){
+    try {
+        const request= new Request(`http://localhost:3000/todos/${id}`, {
+            method:"PUT",
+            headers: {"Content-Type" : "application/json", "Authentication" : `Bearer ${token}`},
+            body: JSON.stringify({edit:"title", value:name})
+        });
+        const response = await fetch(request);
+        if(!response.ok){
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data);
+    }catch (error){
+        console.log(error);
+    }
+}
+
+async function editDescription(id, description){
+    try {
+        const request= new Request(`http://localhost:3000/todos/${id}`, {
+            method:"PUT",
+            headers: {"Content-Type" : "application/json", "Authentication" : `Bearer ${token}`},
+            body: JSON.stringify({edit:"description", value:description})
+        });
+        const response = await fetch(request);
+        if(!response.ok){
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data);
+    }catch (error){
+        console.log(error);
+    }
+}
 
 
 async function checkcomplete(id){
     try {
         const request= new Request(`http://localhost:3000/todos/${id}`, {
             method:"PUT",
-            headers: {"Content-Type" : "application/json"},
+            headers: {"Content-Type" : "application/json", "Authentication" : `Bearer ${token}`},
             body: JSON.stringify({edit:"completed", value:true})
         });
         const response = await fetch(request);
@@ -812,7 +876,7 @@ async function editDate(id, date) {
     try{
         const request = new Request(`http://localhost:3000/todos/${id}`, {
             method:"PUT",
-            headers: {"Content-Type" : "application/json"},
+            headers: {"Content-Type" : "application/json", "Authentication" : `Bearer ${token}`},
             body: JSON.stringify({edit:"duedate", value:date})
         });
         const response = await fetch(request);
@@ -830,7 +894,7 @@ async function editPriority(id, priority) {
     try{
         const request = new Request(`http://localhost:3000/todos/${id}`, {
             method:"PUT",
-            headers: {"Content-Type" : "application/json"},
+            headers: {"Content-Type" : "application/json", "Authentication" : `Bearer ${token}`},
             body: JSON.stringify({edit:"priority", value:priority})
         });
         const response = await fetch(request);
@@ -1031,9 +1095,9 @@ prioritycontaineroverlay.addEventListener('click', (e) => {
 });
 const addoverlay = document.querySelector(".sidebaradd-overlay > .cancel-enter >button:nth-of-type(2)");
 const addtaskinputoverlay = document.querySelector(".sidebaradd-overlay> #addtaskinput");
-addtaskinput.addEventListener('input', () => {
+addtaskinputoverlay.addEventListener('input', () => {
     addoverlay.style.backgroundColor = "rgb(223, 74, 74)"
-    if(addtaskinput.value === ''){
+    if(addtaskinputoverlay.value === ''){
         addoverlay.style.backgroundColor = "rgba(223, 74, 74, 0.418)";
     }
 })
@@ -1077,7 +1141,7 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
                             </ul>
                     </div>
                     </div>
-            <div>${addtaskdescription.value}</div>
+            <div id = "description">${addtaskdescription.value}</div>
             <p>${date.value}</p>
         </li>`
         const ul = document.querySelector(".todo-list");
@@ -1085,7 +1149,7 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
         addtaskinput.value = ''
         addtaskdescription.value = '';
         date.value = '';
-        add.style.backgroundColor = "rgba(223, 74, 74, 0.418)"
+        addoverlay.style.backgroundColor = "rgba(223, 74, 74, 0.418)"
         console.log(count)
         sidebaraddoverlay.classList.remove('active');
         backdrop.classList.remove('active');
@@ -1126,7 +1190,7 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
                             </ul>
                     </div>
                     </div>
-                    <div>${todo.description}</div>
+                    <div id = "description">${todo.description}</div>
                     <p>${todo.duedate}</p>
                 </li>`
                 
@@ -1188,18 +1252,21 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
         })
 })
 
+
+const checkboxbutton = document.querySelector('.checkboxbutton');
+checkboxbutton.addEventListener('click', () =>{
+    console.log('Iamalittleteapot')
+})
 const checkbox = document.querySelector('.checkbox');
 const checkboxedit = document.querySelector('.checkboxedit');
-checkbox.addEventListener('click', function(){
-    checkbox.classList.add('hide');
-    checkboxedit.classList.add('active');
-})
-
 const canceledit = document.querySelector('.cancel-enter-edit > button');
 canceledit.addEventListener('click', function(){
     checkbox.classList.remove('hide');
     checkboxedit.classList.remove('active');
 })
+
+
+
 
 const recentsearch = document.querySelector('.recentsearch');
 recentsearch.addEventListener('click' ,(e) =>{
@@ -1207,21 +1274,184 @@ recentsearch.addEventListener('click' ,(e) =>{
     if(todoitem){
         const todoitemstring = todoitem.className;
         const id = todoitemstring.slice(15);
+        const searchoverlay = document.querySelector('.search-overlay');
+        searchoverlay.classList.remove('active');
         const editoverlay = document.querySelector('.edit-overlay');
+        const searchinput = document.querySelector('.search > input');
+        searchinput.value = '';
         editoverlay.classList.add('active');
-        
+        const editname = document.querySelector('.editname');
+        editname.style.textDecoration = "none";
+        const editinputtitle = document.querySelector('.editinput > input');
+        const editinputdescription = document.querySelector('.editinput input:last-of-type');
+        const datecontent = document.querySelector('#duedateedit > span');
+        const datesvg = document.querySelector('#duedateedit > svg');
+        getSpecificTodo(id).then((specifictodo) =>{
+            console.log(specifictodo.duedate)
+            editname.textContent = `${specifictodo.title}`;
+            editinputtitle.value = `${specifictodo.title}`;
+            editinputtitle.placeholder = `${specifictodo.title}`;
+            const duedate = specifictodo.duedate;
+            const datelabel = document.querySelector('.dateeditoverlay > div > p');
+            datelabel.textContent = duedate
+            const duedatefull = new Date(duedate).toDateString();
+            const today = getRelativeDate(0);
+            const tomorrow = getRelativeDate(1);
+            const nextweek = getRelativeDate(7);
+            const todayday = today.split(' ')[0]
+            const tomorrowday = tomorrow.split(' ')[0]
+            const nextweekday = nextweek.split(' ').slice(0, 3).join(' ');
+            document.querySelector('.dateeditoverlay button:first-of-type span').textContent = todayday;
+            document.querySelector('.dateeditoverlay button:nth-of-type(2) span').textContent = tomorrowday;
+            document.querySelector('.dateeditoverlay button:nth-of-type(3) span').textContent = 'zzz';
+            document.querySelector('.dateeditoverlay button:last-of-type span').textContent = nextweekday;
+           
+            switch(duedatefull){
+                case today:
+                    datecontent.textContent = "Today"
+                    datesvg.style.fill = '#339966'
+                    datesvg.innerHTML = `<path d="M360-300q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/>`;
+                    break;
+                case tomorrow:
+                    datesvg.style.fill = '#ffcc00'
+                    datecontent.textContent = "Tomorrow"
+                    datesvg.innerHTML = `<path d="M450-751.54v-147.69h60v147.69h-60Zm242.92 100.77-41.15-41.15 103.15-106.54 42.54 43.15-104.54 104.54ZM751.54-450v-60h147.69v60H751.54ZM450-60.77v-147.31h60v147.31h-60ZM267.85-652.38 161.54-754.92l43.54-42.16 104.54 104.16-41.77 40.54Zm486.46 490.84L651.77-268.08l40.54-40.15 104.77 101.92-42.77 44.77ZM60.77-450v-60h147.69v60H60.77Zm143.92 288.46-41.77-43.54 103.16-103.15 21.69 20.46 22.08 21.08-105.16 105.15ZM480.09-260q-91.63 0-155.86-64.14Q260-388.28 260-479.91q0-91.63 64.14-155.86Q388.28-700 479.91-700q91.63 0 155.86 64.14Q700-571.72 700-480.09q0 91.63-64.14 155.86Q571.72-260 480.09-260Zm-.09-60q66 0 113-47t47-113q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-160Z"/>`;
+                    break;
+                case nextweek:
+                    datesvg.style.fill = '#6666ff'
+                    datecontent.textContent = "Next week"
+                    datesvg.innerHTML = `<path d="M440-273.85 586.15-420 440-566.15 397.85-524l104 104-104 104L440-273.85ZM172.31-140Q142-140 121-161q-21-21-21-51.31v-415.38Q100-658 121-679q21-21 51.31-21H340v-67.69Q340-798 361-819q21-21 51.31-21h135.38Q578-840 599-819q21 21 21 51.31V-700h167.69Q818-700 839-679q21 21 21 51.31v415.38Q860-182 839-161q-21 21-51.31 21H172.31Zm0-60h615.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-415.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v415.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM400-700h160v-67.69q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H412.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46V-700ZM160-200v-440 440Z"/>`;
+                    break;
+                default:
+                    datecontent.textContent = specifictodo.duedate;
+                    break;
+            }
+            const priorityedit = document.querySelector('.descriptioneditbutton#priorityeditbutton');
+            switch(specifictodo.priority){
+                case 1:
+                    priorityedit.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg>P1'
+                    break;
+                case 2:
+                    priorityedit.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0066cc"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg>P2'
+                    break;
+                case 3:
+                    priorityedit.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ff6600"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg>P3'
+                    break;
+                case 4:
+                    priorityedit.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cc0000"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg>P4'
+                    break;
+
+            }
+            if(specifictodo.description !== ''){
+                editinputdescription.value = `${specifictodo.description}`;
+            }
+            else{
+                editinputdescription.placeholder = `description`;
+            }
+        })
+        const checkbox = document.querySelector('.checkbox');
+        const checkboxedit = document.querySelector('.checkboxedit');
+        checkbox.addEventListener('click', function(e){
+            const button = e.target.closest('.checkboxbutton');
+            if(button){
+                console.log('i am a little teapot');
+                checkcomplete(id);
+                ushantbehere(id);
+                const sameelement = document.querySelectorAll(`.todo-item.count${id}`);
+                sameelement.forEach(element => element.remove());
+                editname.style.textDecoration = 'line-through';
+                editoverlay.classList.remove('active');
+            }    
+            else{
+                checkbox.classList.add('hide');
+                checkboxedit.classList.add('active');
+            }
+            
+        })
+        const enteredit = document.querySelector('.cancel-enter-edit > button:last-of-type');
+        enteredit.addEventListener('click', () =>{
+            console.log(editinputtitle.value)
+            getSpecificTodo(id).then((todo) => {
+                if(editinputtitle.value === todo.title && editinputdescription.value === todo.description){
+                    return;
+                }
+                else if(editinputtitle.value !== todo.title){
+                    editTitle(id,editinputtitle.value );
+                    editname.textContent = editinputtitle.value;
+                    const todotitledate = document.querySelectorAll(`.todo-item.count${id} > span`);
+                    todotitledate.forEach(item => item.textContent = editinputtitle.value);
+                    const todotitle = document.querySelectorAll(`.todo-item.count${id} > .maintodo > span`);
+                    todotitle.forEach(item => item.textContent = editinputtitle.value);
+
+                }
+                else if(editinputdescription.value !== todo.description){
+                    editDescription(id,editinputdescription.value );
+                    const tododescriptiondate = document.querySelectorAll(`.todo-item.count${id} .description`);
+                    tododescriptiondate.forEach(item => item.textContent = editinputdescription.value);
+                    const tododescription = document.querySelectorAll(`.todo-item.count${id} #description`);
+                    tododescription.forEach(item => item.textContent = editinputdescription.value)
+                }   
+                checkbox.classList.remove('hide');
+                checkboxedit.classList.remove('active');
+            })
+            
+        })
+        const deleteedit = document.querySelector('.deleteedit');
+        deleteedit.addEventListener('click', () =>{
+            checkcomplete(id);
+            ushantbehere(id);
+            const sameelement = document.querySelectorAll(`.todo-item.count${id}`);
+            sameelement.forEach(element => element.remove());
+            editname.style.textDecoration = 'line-through';
+            editoverlay.classList.remove('active');
+        })
+
         
     }
 })
 
+//close the editoverlay
 const editoverlay = document.querySelector('.edit-overlay');
 editoverlay.addEventListener('click', (e) =>{
     console.log(e.target)
-    if(e.target !== '.edit-overlay'){
-        return
+    if(e.target === editoverlay){
+        editoverlay.classList.remove('active');
+        const selection = document.querySelectorAll('.selection');
+        selection.forEach(item => item.classList.remove('active'));
     }
-    else if(e.target === '.edit-overlay.active'){
-        editoverlay.classList.remove('acitve');
-
+    const closebutton = e.target.closest('.closebox > button');
+    console.log(closebutton);
+    if(closebutton){
+        editoverlay.classList.remove('active');
+        const selection = document.querySelectorAll('.selection');
+        selection.forEach(item => item.classList.remove('active'));
     }
+    
+    
+    
 })
+
+const duedateedit = document.querySelector('#duedateedit');
+duedateedit.addEventListener('click', () =>{
+    const selection = document.querySelector('.selection.date');
+    selection.classList.toggle('active');
+    
+    // const selection = document.querySelector('.selection');
+    // selection.classList.toggle('active');
+    
+})
+
+const priorityeditbutton = document.querySelector('#priorityeditbutton');
+priorityeditbutton.addEventListener('click', () =>{
+    const selection = document.querySelector('.selection.priority');
+    selection.classList.toggle('active');
+})
+
+function getRelativeDate(days) {
+    const today = new Date();
+    const newDate = new Date(today);
+    newDate.setDate(today.getDate() + days);
+    return newDate.toDateString();
+}
+
+

@@ -187,6 +187,9 @@ ul {
     transition: ease-in-out;
 }
 
+.due{
+    overflow:auto ;
+}
 .add-activity {
     padding-left: 0;
     width: 100%;
@@ -751,7 +754,85 @@ input[type = "date"]:hover{
     font-weight: 400;
     color: black;
     
+    
+    
+    
 }
+.descriptioncontentcontainer{
+    position: relative;
+    
+}
+.selection{
+    position: absolute;
+    height: fit-content;
+    width: 111%;
+    background-color: white;
+    border-radius: 10px;
+    display: none;
+    z-index: 100;
+    box-shadow: 0 0 2px grey;
+}
+.selection.priority{
+    width: 60%;
+    left: 2em;
+    
+    box-shadow: 0 0 2px grey;
+    >ul {
+        margin: 0;
+        font-weight: 100;
+    }
+    
+}
+.selection.date button {
+    padding:0.2em 0 0.2em 0;
+    margin:0.2em 0 0.2em 0 ;
+}
+.selection.priority button{
+    padding: 0.5em 0 0.5em 0;
+    margin: 0;
+}
+.selection.priority button:last-of-type{
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+}
+
+.selection.priority button:first-of-type{
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+}
+.selection.active{
+    display: block;
+}
+
+
+.selection > ul li button:hover{
+    background-color: #cccccc9f;
+}
+.selection > ul li button{
+    margin: 4px 2px 4px 2px;
+}
+.selection > ul li:last-of-type{
+    display: flex;
+    justify-content: center;
+
+}
+.selection > ul li:last-of-type input:hover{
+    
+    background-color: transparent;
+
+}
+.selection > ul li:last-of-type input{
+    
+    width: 100%;
+
+}
+.selection > ul li:last-of-type:hover{
+    
+        background-color: #cccccc9f;
+    
+}
+
+
 #priorityedit{
     padding-top: 15px;
 }
@@ -767,9 +848,12 @@ input[type = "date"]:hover{
     align-items: center;
 
 }
+.descriptioncontent:active{
+    transform: scale(0.9);
+}
 
 .descriptioneditbutton:hover{
-    background-color: rgb(218, 177, 177);
+    background-color: rgba(84, 147, 150, 0.404);
 }
 .editinput{
     border: 1px solid lightgray;
@@ -854,6 +938,67 @@ input[type = "date"]:hover{
     background-color: beige;
     visibility: hidden;
 }
+
+.dateeditoverlay{
+    display: flex;
+    flex-direction: column;
+    
+}
+.dateeditoverlay button{
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    
+}
+.dateeditoverlay button span{
+    color: gray;
+    font-weight: 300;
+    margin-left: auto;
+}
+.dateeditoverlay > div{
+    border-bottom: 1px solid lightgray;
+    > p{
+        font-weight: 300;
+        padding-left: 1em;
+        margin-top: 0;
+        margin-bottom: 0.7em;
+    }
+}
+.priorityeditoverlay{
+    display: flex;
+    flex-direction: column;
+    
+}
+.priorityeditoverlay button{
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    
+}
+.priorityeditoverlay button span{
+    color: gray;
+    font-weight: 300;
+    margin-left: auto;
+}
+.priorityeditoverlay > div{
+    border-bottom: 1px solid lightgray;
+    > p{
+        font-weight: 300;
+        padding-left: 1em;
+        margin-top: 0;
+        margin-bottom: 0.7em;
+    }
+}
+.selection > ul{
+    padding: 0;
+}
+
 
 @media only screen and (max-width: 46em) {
     .dothingsapp{

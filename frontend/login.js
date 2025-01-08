@@ -1,6 +1,9 @@
+const usernamebox = document.querySelector('#usernamelogin');
+const passwordbox = document.querySelector('#passwordlogin')
 const login = async() => {
     const username = document.querySelector('#usernamelogin').value;
     const password = document.querySelector('#passwordlogin').value;
+    const wrongpassorname = document.querySelector('.wrongpassorname');
     try{
         const request = new Request("http://localhost:3000/todos/login", {
             method: "POST",
@@ -10,17 +13,21 @@ const login = async() => {
         const response = await fetch (request);
         
         if (!response.ok) {
-            // Extract error message from response
             const errorData = await response.json();
             console.error('Login failed:', errorData.message);
-            alert(errorData.message); // Display error to user
-            return; // Stop further execution
+            wrongpassorname.textContent = 'Invalid credentials';
+            passwordbox.style.borderColor = 'red';
+            usernamebox.style.borderColor = "red";
+            return;
         }
 
         const data = await response.json();
         localStorage.setItem('token', data.token);
         console.log(localStorage.getItem('token'));
         window.location.href = 'index.html';
+        wrongpassorname.textContent = '';
+        usernamebox.value = '';
+        passwordbox.value = '';
     } catch (err) {
         console.error('Error during login:', err);
         alert('An error occurred during login. Please try again later.');
@@ -30,6 +37,13 @@ const login = async() => {
 
 }
 
+usernamebox.addEventListener('click', () => {
+    usernamebox.style.borderColor = "lightgray"
+})
+
+passwordbox.addEventListener('click', () => {
+    passwordbox.style.borderColor = "lightgray"
+})
 const register = async() => {
     const username = document.querySelector('#usernameregister').value;
     const password = document.querySelector('#passwordregister').value;

@@ -1,8 +1,8 @@
 // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth, } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+import { isSupported, getAnalytics } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-analytics.js";
+import { getAuth, } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -22,9 +22,19 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
-const analytics = getAnalytics(firebaseApp);
+let analytics = null;
+if (typeof window !== "undefined") {
+  isSupported().then((supported) => {
+    if (supported) {
+      analytics = getAnalytics(firebaseApp);
+      console.log("Firebase Analytics initialized.");
+    } else {
+      console.warn("Firebase Analytics is not supported in this environment.");
+    }
+  });
+}
 
 //intialize firebase services
 const auth = getAuth(firebaseApp);
 const db = getFirestore(firebaseApp);
-export default {firebaseApp, auth, db, analytics};
+export {firebaseApp, auth, db, analytics};

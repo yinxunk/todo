@@ -1,7 +1,7 @@
-import{auth, db} from "./firebase.js"
-import { createUserWithEmailAndPassword} from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
-import {signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider} from "firebase/auth"
+import{auth, db, firebaseApp} from "./firebase.js"
+import { createUserWithEmailAndPassword} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+import { doc, setDoc } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+import {signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
 
 const provider = new GoogleAuthProvider();
 const usernamebox = document.querySelector('#usernamelogin');
@@ -9,8 +9,9 @@ const passwordbox = document.querySelector('#passwordlogin')
 
 const loginmanual = async() => {
     const password = passwordbox.value;
+    const email = usernamebox.value;
     try{
-        const userCredential = await firebase.auth().signInWithEmailAndPassword(auth,email,password);
+        const userCredential = await signInWithEmailAndPassword(auth,email,password);
         console.log('Logged in:', userCredential.user);
         localStorage.setItem('uid', userCredential.user.uid);
         window.location.href = 'index.html';
@@ -22,6 +23,12 @@ const loginmanual = async() => {
 
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelector('#Login').addEventListener('click', () => {
+        console.log('hi');
+        loginmanual();
+    });
+});
 
 const logingoogle = async() => {
     try {

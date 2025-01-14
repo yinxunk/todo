@@ -1,5 +1,5 @@
 import { db } from "./firebase.js";
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, getDoc} from "firebase/firestore";
+import { collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, query, where, orderBy, limit} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
 export async function getTodos(userId){
     const todosSnapshot = await getDocs(collection(db, "todos"));
@@ -7,6 +7,25 @@ export async function getTodos(userId){
     .map((doc) => ({id: doc.id, ...doc.data() }));
 }
 
+export async function querySpecificTodo(userId, id) {
+    const todoDocRef = doc(db, "todos", id);
+    const todoSnapshot = await getDoc(todoDocRef);
+
+    if (todoSnapshot.exists()) {
+        const todoData = todoSnapshot.data();
+
+        // Optionally validate the userId
+        if (todoData.userId === userId) {
+            return { id: todoSnapshot.id, ...todoData };
+        } else {
+            console.error("User ID does not match!");
+            return null;
+        }
+    } else {
+        console.error("Todo not found!");
+        return null;
+    }
+}
 export async function getDate(userId) {
     const q = query(
         collection(db, "todos"),

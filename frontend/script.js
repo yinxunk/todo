@@ -1,4 +1,4 @@
-import { getTodos, addTodo, updateTodo, deleteTo, getLatestTodoId , getDate, deleteTodo} from "./todos.js"
+import { getTodos, addTodo, updateTodo, getLatestTodoId , getDate, deleteTodo, querySpecificTodo} from "./todos.js"
 
 
 const token = localStorage.getItem('uid');
@@ -141,23 +141,23 @@ cancel.addEventListener("click", () => {
 
 // retrieval of data and displaying
 
-async function insert(title, priority, duedate, description) {
-    try {
-        const request = new Request("http://localhost:3000/todos", {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-            body: JSON.stringify({ title: title, completed: false, priority: priority, duedate: duedate, description: description, })
-        });
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-    } catch (error) {
-        console.log(error);
-    }
-}
+// async function insert(title, priority, duedate, description) {
+//     try {
+//         const request = new Request("http://localhost:3000/todos", {
+//             method: "POST",
+//             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+//             body: JSON.stringify({ title: title, completed: false, priority: priority, duedate: duedate, description: description, })
+//         });
+//         const response = await fetch(request);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+//         const data = await response.json();
+//         console.log(data);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 
 
@@ -266,8 +266,7 @@ add.addEventListener("click", async () => { //async is needed so that await can 
         addtaskinput.value = ''
         addtaskdescription.value = '';
         date.value = '';
-        add.style.backgroundColor = "rgba(223, 74, 74, 0.418)"
-        console.log(count)
+        add.style.backgroundColor = "rgba(223, 74, 74, 0.418)";
         priority = 1;
 
     }
@@ -302,7 +301,7 @@ add.addEventListener("click", async () => { //async is needed so that await can 
                     </div>
                     </div>
                     <div id = "description">${todo.description || " "}</div>
-                    <p>${todo.duedate.toDate().toLocaleDateString() || " "}</p>
+                    <p>${todo.duedate || " "}</p>
                 </li>`
 
             ul.insertAdjacentHTML('beforeend', button);
@@ -339,12 +338,10 @@ add.addEventListener("click", async () => { //async is needed so that await can 
                         </button>
                         <span>${todo.title}</span>
                         <div class ='description'>${todo.description || " "}</div>
-                        <p>${todo.duedate.toDate().toLocaleDateString() || " "}</p>
+                        <p>${todo.duedate || " "}</p>
                     </li>`
             duedates.insertAdjacentHTML('beforeend', button)
 
-    }).catch((err) => {
-        console.log(err);
     })
     if (uldate.childElementCount === 0) {
         const li = document.createElement("li");
@@ -356,86 +353,86 @@ add.addEventListener("click", async () => { //async is needed so that await can 
 })
 //LIST ALL EXISTING TODOS
 
-async function todos() {
-    try {
-        const request = new Request(`http://localhost:3000/todos`, {
-            method: 'GET',
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`)
-        }
-        const data = await response.json();
-        console.log(data);
-        return data
+// async function todos() {
+//     try {
+//         const request = new Request(`http://localhost:3000/todos`, {
+//             method: 'GET',
+//             headers: {
+//                 "Authorization": `Bearer ${token}`,
+//                 'Content-Type': 'application/json'
+//             }
+//         });
+//         const response = await fetch(request);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`)
+//         }
+//         const data = await response.json();
+//         console.log(data);
+//         return data
 
-    } catch (error) {
-        console.log(error);
-    }
-
-
+//     } catch (error) {
+//         console.log(error);
+//     }
 
 
-}
 
-async function getSpecificTodo(id) {
-    try {
-        const request = new Request(`http://localhost:3000/todos/${id}`, {
-            method: 'GET',
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`)
-        }
-        const data = await response.json();
-        console.log(data);
-        return data
-    } catch (error) {
-        console.log(error);
-    }
-}
 
-async function getDate() {
-    try {
-        const request = new Request(`http://localhost:3000/todos/date`, {
-            method: 'GET',
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            }
-        });
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`)
-        }
-        const data = await response.json();
+// }
 
-        data.forEach((todo, index) => {
-            console.log(`Todo ${index + 1}:`, todo);
-        });
-        return data;
+// async function getSpecificTodo(id) {
+//     try {
+//         const request = new Request(`http://localhost:3000/todos/${id}`, {
+//             method: 'GET',
+//             headers: {
+//                 "Authorization": `Bearer ${token}`,
+//                 'Content-Type': 'application/json'
+//             }
+//         });
+//         const response = await fetch(request);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`)
+//         }
+//         const data = await response.json();
+//         console.log(data);
+//         return data
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
-    } catch (error) {
-        console.log(error);
-    }
-}
-getDate();
+// async function getDate() {
+//     try {
+//         const request = new Request(`http://localhost:3000/todos/date`, {
+//             method: 'GET',
+//             headers: {
+//                 "Authorization": `Bearer ${token}`,
+//                 'Content-Type': 'application/json'
+//             }
+//         });
+//         const response = await fetch(request);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`)
+//         }
+//         const data = await response.json();
+
+//         data.forEach((todo, index) => {
+//             console.log(`Todo ${index + 1}:`, todo);
+//         });
+//         return data;
+
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
+// getDate();
 
 
 document.addEventListener('DOMContentLoaded',  () => {
     const ul = document.querySelector('.todo-list');
-    getTodos(token).forEach((data) => {
+    getTodos(token).then((data) => {
         data.forEach((todo) => {
-            console.log(todo.id);
-            console.log(todo.duedate);
+            console.log(todo.id);;
+            console.log(todo.userId)
             console.log(todo.description);
             todo.description = todo.description === undefined ? '' : todo.description;
             const button =
@@ -465,7 +462,7 @@ document.addEventListener('DOMContentLoaded',  () => {
                     </div>
                 </div>
                 <div id = "description">${todo.description || " "}</div>
-                <p>${todo.duedate.toDate().toLocaleDateString() || " "}</p>
+                <p>${todo.duedate || " "}</p>
             </li>`
             ul.insertAdjacentHTML('beforeend', button);
             switch (todo.priority) {
@@ -508,7 +505,7 @@ document.addEventListener('DOMContentLoaded',  () => {
                     </button>
                     <span>${todo.title}</span>
                     <div class ='description'>${todo.description || " "}</div>
-                    <p>${todo.duedate.toDate().toLocaleDateString() || " "}</p>
+                    <p>${todo.duedate || " "}</p>
                 </li>`
             duedates.insertAdjacentHTML('beforeend', button)
         })
@@ -528,25 +525,25 @@ document.addEventListener('DOMContentLoaded',  () => {
 })
 
 //delete todos
-async function ushantbehere(id) {
-    try {
-        const request = new Request(`http://localhost:3000/todos/${id}`, {
-            method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "content-Type": "application/json"
-            }
-        })
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-    } catch (error) {
-        console.log(error);
-    }
-}
+// async function ushantbehere(id) {
+//     try {
+//         const request = new Request(`http://localhost:3000/todos/${id}`, {
+//             method: "DELETE",
+//             headers: {
+//                 "Authorization": `Bearer ${token}`,
+//                 "content-Type": "application/json"
+//             }
+//         })
+//         const response = await fetch(request);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+//         const data = await response.json();
+//         console.log(data);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 const ul = document.querySelector('.todo-list');
 
@@ -589,22 +586,22 @@ ul.addEventListener('click', (e) => {
             switch (buttonid) {
                 case "one":
                     prio.style.border = "1px solid lightgray"
-                    editPriority(id, 1)
+                    updateTodo(id, {priority: 1})
                     break;
 
                 case "two":
                     prio.style.border = "1px solid lightgray"
-                    editPriority(id, 2)
+                    updateTodo(id, {priority: 2})
                     break;
 
                 case "three":
                     prio.style.border = "1px solid lightgray"
-                    editPriority(id, 3)
+                    updateTodo(id, {priority: 3})
                     break;
 
                 case "four":
                     prio.style.border = "1px solid lightgray"
-                    editPriority(id, 4)
+                    updateTodo(id, {priority: 4})
                     break;
 
             }
@@ -638,7 +635,7 @@ ul.addEventListener('click', (e) => {
             switch (buttonid) {
                 case "one":
                     dates.style.border = "1px solid lightgray"
-                    editDate(id, today.toISOString().split('T')[0]);
+                    updateTodo(id, {duedate: today.toISOString().split('T')[0]});
                     editeddate.forEach(item => item.textContent = today.toISOString().split('T')[0]);
                     break;
 
@@ -646,13 +643,13 @@ ul.addEventListener('click', (e) => {
                     dates.style.border = "1px solid lightgray"
                     const tomorrow = new Date(today);
                     tomorrow.setDate(today.getDate() + 1)
-                    editDate(id, tomorrow.toISOString().split('T')[0]);
+                    updateTodo(id, {duedate: tomorrow.toISOString().split('T')[0]});
                     editeddate.forEach(item => item.textContent = tomorrow.toISOString().split('T')[0]);
                     break;
 
                 case "three":
                     dates.style.border = "1px solid lightgray"
-                    editDate(id, null);
+                    updateTodo(id, {duedate: null});
                     editeddate.forEach(item => item.textContent = null);
                     break;
 
@@ -660,7 +657,7 @@ ul.addEventListener('click', (e) => {
                     dates.style.border = "1px solid lightgray"
                     const nextweek = new Date(today);
                     nextweek.setDate(today.getDate() + 7);
-                    editDate(id, nextweek.toISOString().split('T')[0]);
+                    updateTodo(id, {duedate: nextweek.toISOString().split('T')[0]});
                     editeddate.forEach(item => item.textContent = nextweek.toISOString().split('T')[0]);
                     break;
 
@@ -704,96 +701,96 @@ uldate.addEventListener('click', (e) => {
 //edit todos
 
 
-async function editTitle(id, name) {
-    try {
-        const request = new Request(`http://localhost:3000/todos/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-            body: JSON.stringify({ edit: "title", value: name })
-        });
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-    } catch (error) {
-        console.log(error);
-    }
-}
+// async function editTitle(id, name) {
+//     try {
+//         const request = new Request(`http://localhost:3000/todos/${id}`, {
+//             method: "PUT",
+//             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+//             body: JSON.stringify({ edit: "title", value: name })
+//         });
+//         const response = await fetch(request);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+//         const data = await response.json();
+//         console.log(data);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
-async function editDescription(id, description) {
-    try {
-        const request = new Request(`http://localhost:3000/todos/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-            body: JSON.stringify({ edit: "description", value: description })
-        });
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-    } catch (error) {
-        console.log(error);
-    }
-}
+// async function editDescription(id, description) {
+//     try {
+//         const request = new Request(`http://localhost:3000/todos/${id}`, {
+//             method: "PUT",
+//             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+//             body: JSON.stringify({ edit: "description", value: description })
+//         });
+//         const response = await fetch(request);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+//         const data = await response.json();
+//         console.log(data);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 
-async function checkcomplete(id) {
-    try {
-        const request = new Request(`http://localhost:3000/todos/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-            body: JSON.stringify({ edit: "completed", value: true })
-        });
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-    } catch (error) {
-        console.log(error);
-    }
-}
+// async function checkcomplete(id) {
+//     try {
+//         const request = new Request(`http://localhost:3000/todos/${id}`, {
+//             method: "PUT",
+//             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+//             body: JSON.stringify({ edit: "completed", value: true })
+//         });
+//         const response = await fetch(request);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+//         const data = await response.json();
+//         console.log(data);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
-async function editDate(id, date) {
-    try {
-        const request = new Request(`http://localhost:3000/todos/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-            body: JSON.stringify({ edit: "duedate", value: date })
-        });
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-    } catch (error) {
-        console.log(error);
-    }
-}
+// async function editDate(id, date) {
+//     try {
+//         const request = new Request(`http://localhost:3000/todos/${id}`, {
+//             method: "PUT",
+//             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+//             body: JSON.stringify({ edit: "duedate", value: date })
+//         });
+//         const response = await fetch(request);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+//         const data = await response.json();
+//         console.log(data);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
-async function editPriority(id, priority) {
-    try {
-        const request = new Request(`http://localhost:3000/todos/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
-            body: JSON.stringify({ edit: "priority", value: priority })
-        });
-        const response = await fetch(request);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data);
-    } catch (error) {
-        console.log(error);
-    }
-}
+// async function editPriority(id, priority) {
+//     try {
+//         const request = new Request(`http://localhost:3000/todos/${id}`, {
+//             method: "PUT",
+//             headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+//             body: JSON.stringify({ edit: "priority", value: priority })
+//         });
+//         const response = await fetch(request);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! Status: ${response.status}`);
+//         }
+//         const data = await response.json();
+//         console.log(data);
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 //search function
 function displaysearch(matches) {
@@ -1079,7 +1076,7 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
                     </div>
                     </div>
                     <div id = "description">${todo.description || " "}</div>
-                    <p>${todo.duedate.toDate().toLocaleDateString() || " "}</p>
+                    <p>${todo.duedate || " "}</p>
                 </li>`
 
             ul.insertAdjacentHTML('beforeend', button);
@@ -1105,7 +1102,7 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
     const duedates = document.querySelector('.due-date > div > ul');
     duedates.innerHTML = '';
 
-    await getDate().then((data) => {
+    await getDate(token).then((data) => {
 
         duedates.innerHTML = ''
         data.forEach((todo) => {
@@ -1123,7 +1120,7 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
                         </button>
                         <span>${todo.title}</span>
                         <div class ='description'>${todo.description || " "}</div>
-                        <p>${todo.duedate.toDate().toLocaleDateString() || " "}</p>
+                        <p>${todo.duedate || " "}</p>
                     </li>`
             duedates.insertAdjacentHTML('beforeend', button)
         })
@@ -1162,6 +1159,7 @@ recentsearch.addEventListener('click', (e) => {
     if (todoitem) {
         const todoitemstring = todoitem.className;
         const id = todoitemstring.slice(15);
+        console.log(id);
         const searchoverlay = document.querySelector('.search-overlay');
         searchoverlay.classList.remove('active');
         const editoverlay = document.querySelector('.edit-overlay');
@@ -1174,7 +1172,9 @@ recentsearch.addEventListener('click', (e) => {
         const editinputdescription = document.querySelector('.editinput input:last-of-type');
         const datecontent = document.querySelector('#duedateedit > span');
         const datesvg = document.querySelector('#duedateedit > svg');
-        getSpecificTodo(id).then((specifictodo) => {
+        querySpecificTodo(token, id).then((specifictodo) => {
+            console.log("querySpecificTodo")
+            console.log(specifictodo)
             console.log(specifictodo.duedate)
             editname.textContent = `${specifictodo.title}`;
             editinputtitle.value = `${specifictodo.title}`;
@@ -1259,12 +1259,12 @@ recentsearch.addEventListener('click', (e) => {
         const enteredit = document.querySelector('.cancel-enter-edit > button:last-of-type');
         enteredit.addEventListener('click', () => {
             console.log(editinputtitle.value)
-            getSpecificTodo(id).then((todo) => {
+            querySpecificTodo(token, id).then((todo) => {
                 if (editinputtitle.value === todo.title && editinputdescription.value === todo.description) {
                     return;
                 }
                 else if (editinputtitle.value !== todo.title) {
-                    editTitle(id, editinputtitle.value);
+                    updateTodo(id, {title:editinputtitle.value});
                     editname.textContent = editinputtitle.value;
                     const todotitledate = document.querySelectorAll(`.todo-item.count${id} > span`);
                     todotitledate.forEach(item => item.textContent = editinputtitle.value);
@@ -1273,7 +1273,7 @@ recentsearch.addEventListener('click', (e) => {
 
                 }
                 else if (editinputdescription.value !== todo.description) {
-                    editDescription(id, editinputdescription.value);
+                    updateTodo(id, {description: editinputdescription.value});
                     const tododescriptiondate = document.querySelectorAll(`.todo-item.count${id} .description`);
                     tododescriptiondate.forEach(item => item.textContent = editinputdescription.value);
                     const tododescription = document.querySelectorAll(`.todo-item.count${id} #description`);
@@ -1286,11 +1286,11 @@ recentsearch.addEventListener('click', (e) => {
         })
         const deleteedit = document.querySelector('.deleteedit');
         deleteedit.addEventListener('click', () => {
-            updateTodo(id);
+            updateTodo(id, {complete: true});
             deleteTodo(id);
             const sameelement = document.querySelectorAll(`.todo-item.count${id}`);
-            sameelement.forEach(element => element.remove());
             editname.style.textDecoration = 'line-through';
+            sameelement.forEach(element => element.remove());
             editoverlay.classList.remove('active');
         })
 

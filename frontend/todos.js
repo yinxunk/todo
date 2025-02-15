@@ -1,8 +1,9 @@
 import { db } from "./firebase.js";
-import { collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, query, where, orderBy, limit} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
+import { collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc, query, where, orderBy, limit, Timestamp} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
 export async function getTodos(userId){
-    const todosSnapshot = await getDocs(collection(db, "todos"));
+    const todosQuery = query(collection(db,"todos"), orderBy("duedatestamp", "asc"), orderBy("priority","desc"));
+    const todosSnapshot = await getDocs(todosQuery);
     return todosSnapshot.docs.filter((doc) => doc.data().userId === userId)
     .map((doc) => ({id: doc.id, ...doc.data() }));
 }
@@ -46,8 +47,8 @@ export async function getLatestTodoId(userId) {
         const todosRef = collection(db,"todos");
         const q = query(
             todosRef,
-            where("user_id", "==", userId),
-            orderBy("created_at", "desc"),
+            where("userId", "==", userId),
+            orderBy("createdat", "desc"),
             limit(1)
         );
         const querySnapshot = await getDocs(q);
@@ -73,6 +74,8 @@ export async function addTodo(title, priority, duedate, description, userId){
         description,
         userId,
         completed: false,
+        createdat: Timestamp.now(),
+        duedatestamp: duedate ? Timestamp.fromDate(new Date(duedate)) : null
 
     });
     console.log(`TODO ${title} added!`)

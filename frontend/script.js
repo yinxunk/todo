@@ -82,7 +82,7 @@ hidebuttonmain.addEventListener("click", () => {
     sidebarhidebutton.classList.toggle("hide");
     const themebutton = document.querySelector(".theme.hide")
     themebutton.classList.toggle("hide");
-    width = 46 * parseFloat(getComputedStyle(document.documentElement).fontSize);
+    const width = 46 * parseFloat(getComputedStyle(document.documentElement).fontSize);
     if (window.innerWidth <= width) {
         const main = document.querySelector('.main');
         main.style.backgroundColor = "#bfbfbf"
@@ -224,14 +224,23 @@ add.addEventListener("click", async () => { //async is needed so that await can 
     console.log(addtaskinput.value);
     console.log(addtaskdescription.value)
     console.log(date.value)
+    let duedateinput = date.value
+    if (date.value === ''){
+        duedateinput = '9999-12-31';
+        console.log('true');
+    }
     if (addtaskinput.value === '') {
         return
     }
     else {
         console.log(date.value)
-        await addTodo(addtaskinput.value, priority, date.value, addtaskdescription.value, token);
+        await addTodo(addtaskinput.value, priority, duedateinput, addtaskdescription.value, token);
         const thisId = await getLatestTodoId(token);
-
+        let duedate = date.value;
+        if(duedateinput === '9999-12-31'){
+            console.log('true');
+            duedate = null;
+        }
         const button =
             `<li class="todo-item ${thisId}">
             <div class = 'maintodo'>
@@ -259,7 +268,7 @@ add.addEventListener("click", async () => { //async is needed so that await can 
                     </div>
                     </div>
             <div id = "description">${addtaskdescription.value}</div>
-            <p>${date.value}</p>
+            <p>${duedate}</p>
         </li>`
         const ul = document.querySelector(".todo-list");
         ul.insertAdjacentHTML('beforeend', button);
@@ -274,6 +283,10 @@ add.addEventListener("click", async () => { //async is needed so that await can 
 
     const todos = await getTodos(token);
     todos.forEach((todo) => {
+        let duedate = todo.duedate
+        if(todo.duedate === '9999-12-31'){
+            duedate = ' ';
+        }
             const button =
                 `<li class="todo-item count${todo.id}">
                     <div class = 'maintodo'>
@@ -301,7 +314,7 @@ add.addEventListener("click", async () => { //async is needed so that await can 
                     </div>
                     </div>
                     <div id = "description">${todo.description || " "}</div>
-                    <p>${todo.duedate || " "}</p>
+                    <p>${duedate || " "}</p>
                 </li>`
 
             ul.insertAdjacentHTML('beforeend', button);
@@ -328,6 +341,10 @@ add.addEventListener("click", async () => { //async is needed so that await can 
     duedates.innerHTML = '';
     const todoswithdates = await getDate(token);
     todoswithdates.forEach((todo) => {
+        let duedate = todo.duedate;
+        if(todo.duedate === '9999-12-31'){
+            duedate = ' ';
+        }
             const button =
                 `<li class="todo-item count${todo.id}">
                         <button class="check count${todo.id}">
@@ -338,7 +355,7 @@ add.addEventListener("click", async () => { //async is needed so that await can 
                         </button>
                         <span>${todo.title}</span>
                         <div class ='description'>${todo.description || " "}</div>
-                        <p>${todo.duedate || " "}</p>
+                        <p>${duedate || " "}</p>
                     </li>`
             duedates.insertAdjacentHTML('beforeend', button)
 
@@ -435,6 +452,11 @@ document.addEventListener('DOMContentLoaded',  () => {
             console.log(todo.userId)
             console.log(todo.description);
             todo.description = todo.description === undefined ? '' : todo.description;
+            let duedate = todo.duedate;
+            if(todo.duedate === '9999-12-31'){
+                console.log('true');
+                duedate = ' ';
+            }
             const button =
                 `<li class="todo-item count${todo.id}">
                 <div class = 'maintodo'>
@@ -462,7 +484,7 @@ document.addEventListener('DOMContentLoaded',  () => {
                     </div>
                 </div>
                 <div id = "description">${todo.description || " "}</div>
-                <p>${todo.duedate || " "}</p>
+                <p>${duedate || " "}</p>
             </li>`
             ul.insertAdjacentHTML('beforeend', button);
             switch (todo.priority) {
@@ -495,6 +517,11 @@ document.addEventListener('DOMContentLoaded',  () => {
             console.log(todo.duedate);
             console.log(todo.description);
             todo.description = todo.description === undefined ? '' : todo.description;
+            let duedate = todo.duedate
+            if(todo.duedate === '9999-12-31'){
+                console.log('true');
+                duedate = ' ';
+            }
             const button =
                 `<li class="todo-item count${todo.id}">
                     <button class="check count${todo.id}">
@@ -505,7 +532,7 @@ document.addEventListener('DOMContentLoaded',  () => {
                     </button>
                     <span>${todo.title}</span>
                     <div class ='description'>${todo.description || " "}</div>
-                    <p>${todo.duedate || " "}</p>
+                    <p>${duedate || " "}</p>
                 </li>`
             duedates.insertAdjacentHTML('beforeend', button)
         })
@@ -986,24 +1013,31 @@ addtaskinputoverlay.addEventListener('input', () => {
     }
 })
 addoverlay.addEventListener("click", async () => { //async is needed so that await can be used
-    currentid += 1;
-    localStorage.setItem('counter', currentid);
-    const count = `count${currentid}`;
+   
     const addtaskinput = document.querySelector('.sidebaradd-overlay >#addtaskinput');
     const addtaskdescription = document.querySelector('.sidebaradd-overlay> #addtaskdescription');
     const date = document.querySelector('.sidebaradd-overlay .category > input');
+    let duedateinput = date.value
+    if(date.value === ''){
+        duedateinput = '9999-12-31';
+        console.log('true');
+    }
     if (addtaskinput.value === '') {
         return
     }
     else {
         console.log(date.value)
-        
         await addTodo(addtaskinput.value, priority, date.value, addtaskdescription.value, token);
-
+        let duedate = date.value;
+        if(duedateinput === '9999-12-31'){
+            console.log('true');
+            duedate = null;
+        }
+        const thisId = await getLatestTodoId(token);
         const button =
-            `<li class="todo-item ${count}">
+            `<li class="todo-item ${thisId}">
             <div class = 'maintodo'>
-                        <button class="check ${count}">
+                        <button class="check ${thisId}">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
                             <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
                             <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
@@ -1016,18 +1050,18 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
                                 <li><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M200-200h50.46l409.46-409.46-50.46-50.46L200-250.46V-200Zm-60 60v-135.38l527.62-527.39q9.07-8.24 20.03-12.73 10.97-4.5 23-4.5t23.3 4.27q11.28 4.27 19.97 13.58l48.85 49.46q9.31 8.69 13.27 20 3.96 11.31 3.96 22.62 0 12.07-4.12 23.03-4.12 10.97-13.11 20.04L275.38-140H140Zm620.38-570.15-50.23-50.23 50.23 50.23Zm-126.13 75.9-24.79-25.67 50.46 50.46-25.67-24.79Z"/></svg><span>Edit</span></button></li>
                                 
                                 <li><span>Due date</span></li>
-                                <li class = "dateedit ${count}"><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#339966"><path d="M360-317.69q-38.54 0-65.42-26.89-26.89-26.88-26.89-65.42 0-38.54 26.89-65.42 26.88-26.89 65.42-26.89 38.54 0 65.42 26.89 26.89 26.88 26.89 65.42 0 38.54-26.89 65.42-26.88 26.89-65.42 26.89ZM212.31-100Q182-100 161-121q-21-21-21-51.31v-535.38Q140-738 161-759q21-21 51.31-21h55.38v-84.61h61.54V-780h303.08v-84.61h60V-780h55.38Q778-780 799-759q21 21 21 51.31v535.38Q820-142 799-121q-21 21-51.31 21H212.31Zm0-60h535.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-375.38H200v375.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM200-607.69h560v-100q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H212.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v100Zm0 0V-720v112.31Z"/></svg></button><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffcc00"><path d="M450-751.54v-147.69h60v147.69h-60Zm242.92 100.77-41.15-41.15 103.15-106.54 42.54 43.15-104.54 104.54ZM751.54-450v-60h147.69v60H751.54ZM450-60.77v-147.31h60v147.31h-60ZM267.85-652.38 161.54-754.92l43.54-42.16 104.54 104.16-41.77 40.54Zm486.46 490.84L651.77-268.08l40.54-40.15 104.77 101.92-42.77 44.77ZM60.77-450v-60h147.69v60H60.77Zm143.92 288.46-41.77-43.54 103.16-103.15 21.69 20.46 22.08 21.08-105.16 105.15ZM480.09-260q-91.63 0-155.86-64.14Q260-388.28 260-479.91q0-91.63 64.14-155.86Q388.28-700 479.91-700q91.63 0 155.86 64.14Q700-571.72 700-480.09q0 91.63-64.14 155.86Q571.72-260 480.09-260Zm-.09-60q66 0 113-47t47-113q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-160Z"/></svg></button><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0099ff"><path d="M100-220v-220q0-22.38 10.62-43.42Q121.23-504.46 140-518v-102q0-41.92 29.04-70.96Q198.08-720 240-720h170q21.85 0 39.15 8.5Q466.46-703 480-688q13.54-15 30.85-23.5 17.3-8.5 39.15-8.5h170q41.92 0 70.96 29.04Q820-661.92 820-620v102q18.77 13.54 29.38 34.58Q860-462.38 860-440v220h-60v-80H160v80h-60Zm410-320h250v-80q0-17-11.5-28.5T720-660H550q-17 0-28.5 11.5T510-620v80Zm-310 0h250v-80q0-17-11.5-28.5T410-660H240q-17 0-28.5 11.5T200-620v80Zm-40 180h640v-80q0-17-11.5-28.5T760-480H200q-17 0-28.5 11.5T160-440v80Zm640 0H160h640Z"/></svg></button>
+                                <li class = "dateedit ${thisId}"><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#339966"><path d="M360-317.69q-38.54 0-65.42-26.89-26.89-26.88-26.89-65.42 0-38.54 26.89-65.42 26.88-26.89 65.42-26.89 38.54 0 65.42 26.89 26.89 26.88 26.89 65.42 0 38.54-26.89 65.42-26.88 26.89-65.42 26.89ZM212.31-100Q182-100 161-121q-21-21-21-51.31v-535.38Q140-738 161-759q21-21 51.31-21h55.38v-84.61h61.54V-780h303.08v-84.61h60V-780h55.38Q778-780 799-759q21 21 21 51.31v535.38Q820-142 799-121q-21 21-51.31 21H212.31Zm0-60h535.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-375.38H200v375.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM200-607.69h560v-100q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H212.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v100Zm0 0V-720v112.31Z"/></svg></button><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ffcc00"><path d="M450-751.54v-147.69h60v147.69h-60Zm242.92 100.77-41.15-41.15 103.15-106.54 42.54 43.15-104.54 104.54ZM751.54-450v-60h147.69v60H751.54ZM450-60.77v-147.31h60v147.31h-60ZM267.85-652.38 161.54-754.92l43.54-42.16 104.54 104.16-41.77 40.54Zm486.46 490.84L651.77-268.08l40.54-40.15 104.77 101.92-42.77 44.77ZM60.77-450v-60h147.69v60H60.77Zm143.92 288.46-41.77-43.54 103.16-103.15 21.69 20.46 22.08 21.08-105.16 105.15ZM480.09-260q-91.63 0-155.86-64.14Q260-388.28 260-479.91q0-91.63 64.14-155.86Q388.28-700 479.91-700q91.63 0 155.86 64.14Q700-571.72 700-480.09q0 91.63-64.14 155.86Q571.72-260 480.09-260Zm-.09-60q66 0 113-47t47-113q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-160Z"/></svg></button><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0099ff"><path d="M100-220v-220q0-22.38 10.62-43.42Q121.23-504.46 140-518v-102q0-41.92 29.04-70.96Q198.08-720 240-720h170q21.85 0 39.15 8.5Q466.46-703 480-688q13.54-15 30.85-23.5 17.3-8.5 39.15-8.5h170q41.92 0 70.96 29.04Q820-661.92 820-620v102q18.77 13.54 29.38 34.58Q860-462.38 860-440v220h-60v-80H160v80h-60Zm410-320h250v-80q0-17-11.5-28.5T720-660H550q-17 0-28.5 11.5T510-620v80Zm-310 0h250v-80q0-17-11.5-28.5T410-660H240q-17 0-28.5 11.5T200-620v80Zm-40 180h640v-80q0-17-11.5-28.5T760-480H200q-17 0-28.5 11.5T160-440v80Zm640 0H160h640Z"/></svg></button>
                                 <button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#6666ff"><path d="M440-273.85 586.15-420 440-566.15 397.85-524l104 104-104 104L440-273.85ZM172.31-140Q142-140 121-161q-21-21-21-51.31v-415.38Q100-658 121-679q21-21 51.31-21H340v-67.69Q340-798 361-819q21-21 51.31-21h135.38Q578-840 599-819q21 21 21 51.31V-700h167.69Q818-700 839-679q21 21 21 51.31v415.38Q860-182 839-161q-21 21-51.31 21H172.31Zm0-60h615.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-415.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v415.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM400-700h160v-67.69q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H412.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46V-700ZM160-200v-440 440Z"/></svg></button><li>
                                 
                                 <li><span>Priority</span></li>
-                                <li class = "priorityedit ${count}"><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg></button><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0066cc"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg></button><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ff6600"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg></button>
+                                <li class = "priorityedit ${thisId}"><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg></button><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0066cc"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg></button><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ff6600"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg></button>
                                 <button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cc0000"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg></button></li>
-                                <li class = "delete ${count}"><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cc0000"><path d="M292.31-140q-29.92 0-51.12-21.19Q220-182.39 220-212.31V-720h-40v-60h180v-35.38h240V-780h180v60h-40v507.69Q740-182 719-161q-21 21-51.31 21H292.31ZM680-720H280v507.69q0 5.39 3.46 8.85t8.85 3.46h375.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-720ZM376.16-280h59.99v-360h-59.99v360Zm147.69 0h59.99v-360h-59.99v360ZM280-720v520-520Z"/></svg><span>Delete</span></button></li>
+                                <li class = "delete ${thisId}"><button><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cc0000"><path d="M292.31-140q-29.92 0-51.12-21.19Q220-182.39 220-212.31V-720h-40v-60h180v-35.38h240V-780h180v60h-40v507.69Q740-182 719-161q-21 21-51.31 21H292.31ZM680-720H280v507.69q0 5.39 3.46 8.85t8.85 3.46h375.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46V-720ZM376.16-280h59.99v-360h-59.99v360Zm147.69 0h59.99v-360h-59.99v360ZM280-720v520-520Z"/></svg><span>Delete</span></button></li>
                             </ul>
                     </div>
                     </div>
             <div id = "description">${addtaskdescription.value}</div>
-            <p>${date.value}</p>
+            <p>${duedate}</p>
         </li>`
         const ul = document.querySelector(".todo-list");
         ul.insertAdjacentHTML('beforeend', button);
@@ -1035,7 +1069,7 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
         addtaskdescription.value = '';
         date.value = '';
         addoverlay.style.backgroundColor = "rgba(223, 74, 74, 0.418)"
-        console.log(count)
+        console.log(thisId)
         sidebaraddoverlay.classList.remove('active');
         backdrop.classList.remove('active');
         priority = 1;
@@ -1049,6 +1083,11 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
             console.log(todo.id);
             console.log(todo.description)
             todo.description = todo.description === undefined ? '' : todo.description;
+            let duedate = todo.duedate;
+            if(todo.duedate === '9999-12-31'){
+                console.log('true');
+                duedate = ' ';
+            }
             const button =
                 `<li class="todo-item count${todo.id}">
                     <div class = 'maintodo'>
@@ -1076,7 +1115,7 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
                     </div>
                     </div>
                     <div id = "description">${todo.description || " "}</div>
-                    <p>${todo.duedate || " "}</p>
+                    <p>${duedate || " "}</p>
                 </li>`
 
             ul.insertAdjacentHTML('beforeend', button);
@@ -1110,6 +1149,11 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
             console.log(todo.duedate);
             console.log(todo.description);
             todo.description = todo.description === undefined ? '' : todo.description;
+            let duedate = todo.duedate;
+            if(todo.duedate === '9999-12-31'){
+                console.log('true');
+                duedate = ' ';
+            }
             const button =
                 `<li class="todo-item count${todo.id}">
                         <button class="check count${todo.id}">
@@ -1120,7 +1164,7 @@ addoverlay.addEventListener("click", async () => { //async is needed so that awa
                         </button>
                         <span>${todo.title}</span>
                         <div class ='description'>${todo.description || " "}</div>
-                        <p>${todo.duedate || " "}</p>
+                        <p>${duedate || " "}</p>
                     </li>`
             duedates.insertAdjacentHTML('beforeend', button)
         })
@@ -1152,11 +1196,12 @@ canceledit.addEventListener('click', function () {
 
 
 
-
+console.log("this is line 1158");
 const recentsearch = document.querySelector('.recentsearch');
 recentsearch.addEventListener('click', (e) => {
     const todoitem = e.target.closest('.todo-item');
     if (todoitem) {
+        
         const todoitemstring = todoitem.className;
         const id = todoitemstring.slice(15);
         console.log(id);
@@ -1201,13 +1246,13 @@ recentsearch.addEventListener('click', (e) => {
                     datesvg.innerHTML = `<path d="M360-300q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/>`;
                     break;
                 case tomorrow:
-                    datesvg.style.fill = '#ffcc00'
                     datecontent.textContent = "Tomorrow"
+                    datesvg.style.fill = '#ffcc00'
                     datesvg.innerHTML = `<path d="M450-751.54v-147.69h60v147.69h-60Zm242.92 100.77-41.15-41.15 103.15-106.54 42.54 43.15-104.54 104.54ZM751.54-450v-60h147.69v60H751.54ZM450-60.77v-147.31h60v147.31h-60ZM267.85-652.38 161.54-754.92l43.54-42.16 104.54 104.16-41.77 40.54Zm486.46 490.84L651.77-268.08l40.54-40.15 104.77 101.92-42.77 44.77ZM60.77-450v-60h147.69v60H60.77Zm143.92 288.46-41.77-43.54 103.16-103.15 21.69 20.46 22.08 21.08-105.16 105.15ZM480.09-260q-91.63 0-155.86-64.14Q260-388.28 260-479.91q0-91.63 64.14-155.86Q388.28-700 479.91-700q91.63 0 155.86 64.14Q700-571.72 700-480.09q0 91.63-64.14 155.86Q571.72-260 480.09-260Zm-.09-60q66 0 113-47t47-113q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-160Z"/>`;
                     break;
                 case nextweek:
-                    datesvg.style.fill = '#6666ff'
                     datecontent.textContent = "Next week"
+                    datesvg.style.fill = '#6666ff'
                     datesvg.innerHTML = `<path d="M440-273.85 586.15-420 440-566.15 397.85-524l104 104-104 104L440-273.85ZM172.31-140Q142-140 121-161q-21-21-21-51.31v-415.38Q100-658 121-679q21-21 51.31-21H340v-67.69Q340-798 361-819q21-21 51.31-21h135.38Q578-840 599-819q21 21 21 51.31V-700h167.69Q818-700 839-679q21 21 21 51.31v415.38Q860-182 839-161q-21 21-51.31 21H172.31Zm0-60h615.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-415.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v415.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM400-700h160v-67.69q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H412.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46V-700ZM160-200v-440 440Z"/>`;
                     break;
                 default:
@@ -1230,6 +1275,7 @@ recentsearch.addEventListener('click', (e) => {
                     break;
 
             }
+            
             if (specifictodo.description !== '') {
                 editinputdescription.value = `${specifictodo.description}`;
             }
@@ -1293,6 +1339,69 @@ recentsearch.addEventListener('click', (e) => {
             sameelement.forEach(element => element.remove());
             editoverlay.classList.remove('active');
         })
+        // const dateeditoverlaybuttons = document.querySelectorAll('.dateeditoverlay > button');
+        // dateeditoverlaybuttons.forEach(item => item.addEventListener('click', () => {
+        //     if(item.tex)
+        //     updateTodo(id, {duedate: })
+        // }))
+        const dateeditoverlaybuttons = document.querySelectorAll('.dateeditoverlay > button');
+        dateeditoverlaybuttons.forEach(item => item.addEventListener('click', () => {
+            const duedateeditbuttonspan = document.querySelector('.descriptioneditbutton#duedateedit > span');
+            if(item.textContent.includes('Today')){
+                const today = new Date();
+                const numberDate = today.toISOString().split('T')[0];
+                updateTodo(id, {duedate: numberDate});
+                datesvg.style.fill = '#339966'
+                datesvg.innerHTML = `<path d="M360-300q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/>`;
+                duedateeditbuttonspan.textContent = 'Today';
+            }
+            else if(item.textContent.includes('Tomorrow')){
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1); 
+                updateTodo(id, {duedate: tomorrow.toISOString().split('T')[0]});
+                datesvg.style.fill = '#ffcc00'
+                datesvg.innerHTML = `<path d="M450-751.54v-147.69h60v147.69h-60Zm242.92 100.77-41.15-41.15 103.15-106.54 42.54 43.15-104.54 104.54ZM751.54-450v-60h147.69v60H751.54ZM450-60.77v-147.31h60v147.31h-60ZM267.85-652.38 161.54-754.92l43.54-42.16 104.54 104.16-41.77 40.54Zm486.46 490.84L651.77-268.08l40.54-40.15 104.77 101.92-42.77 44.77ZM60.77-450v-60h147.69v60H60.77Zm143.92 288.46-41.77-43.54 103.16-103.15 21.69 20.46 22.08 21.08-105.16 105.15ZM480.09-260q-91.63 0-155.86-64.14Q260-388.28 260-479.91q0-91.63 64.14-155.86Q388.28-700 479.91-700q91.63 0 155.86 64.14Q700-571.72 700-480.09q0 91.63-64.14 155.86Q571.72-260 480.09-260Zm-.09-60q66 0 113-47t47-113q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-160Z"/>`;
+                duedateeditbuttonspan.textContent = 'Tomorrow';
+            }
+            else if(item.textContent.includes('No')){
+                updateTodo(id, {duedate: ""});
+                datesvg.innerHTML = `<path d="M100-220v-220q0-22.38 10.62-43.42Q121.23-504.46 140-518v-102q0-41.92 29.04-70.96Q198.08-720 240-720h170q21.85 0 39.15 8.5Q466.46-703 480-688q13.54-15 30.85-23.5 17.3-8.5 39.15-8.5h170q41.92 0 70.96 29.04Q820-661.92 820-620v102q18.77 13.54 29.38 34.58Q860-462.38 860-440v220h-60v-80H160v80h-60Zm410-320h250v-80q0-17-11.5-28.5T720-660H550q-17 0-28.5 11.5T510-620v80Zm-310 0h250v-80q0-17-11.5-28.5T410-660H240q-17 0-28.5 11.5T200-620v80Zm-40 180h640v-80q0-17-11.5-28.5T760-480H200q-17 0-28.5 11.5T160-440v80Zm640 0H160h640Z"/>`;  
+                duedateeditbuttonspan.textContent = 'ZZZ';
+            }
+            else if(item.textContent.includes('Next')){
+                const nextweek = new Date();
+                nextweek.setDate(nextweek.getDate() + 7);
+                updateTodo(id, {duedate: nextweek.toISOString().split('T')[0]})
+                datesvg.style.fill = '#6666ff'
+                datesvg.innerHTML = `<path d="M440-273.85 586.15-420 440-566.15 397.85-524l104 104-104 104L440-273.85ZM172.31-140Q142-140 121-161q-21-21-21-51.31v-415.38Q100-658 121-679q21-21 51.31-21H340v-67.69Q340-798 361-819q21-21 51.31-21h135.38Q578-840 599-819q21 21 21 51.31V-700h167.69Q818-700 839-679q21 21 21 51.31v415.38Q860-182 839-161q-21 21-51.31 21H172.31Zm0-60h615.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-415.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v415.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM400-700h160v-67.69q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H412.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46V-700ZM160-200v-440 440Z"/>`;   
+                duedateeditbuttonspan.textContent = 'NextWeek';
+            }
+        }))
+
+        const priorityeditoverlaybuttons = document.querySelectorAll('.priorityeditoverlay > button');
+        console.log(priorityeditoverlaybuttons);
+        priorityeditoverlaybuttons.forEach(item => item.addEventListener('click', () => {
+            updateTodo(id, {priority: Number(item.textContent[9])});
+            console.log(typeof(item.textContent[9]));
+            const priorityedit = document.querySelector('.descriptioneditbutton#priorityeditbutton');
+
+            switch(item.textContent[9]){
+                case '1':
+                    priorityedit.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg>P1'
+                    break;
+                case '2':
+                    priorityedit.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#0066cc"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg>P2'
+                    break;
+                case '3':
+                    priorityedit.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#ff6600"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg>P3'
+                    break;
+                case '4':
+                    priorityedit.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#cc0000"><path d="M480-163.08q-24.75 0-42.37-17.62Q420-198.33 420-223.08q0-24.75 17.63-42.37 17.62-17.63 42.37-17.63 24.75 0 42.37 17.63Q540-247.83 540-223.08q0 24.75-17.63 42.38-17.62 17.62-42.37 17.62Zm-54.61-196.15v-457.69h109.22v457.69H425.39Z"/></svg>P4'
+                    break;
+
+            }
+            
+        }))
 
 
     }
@@ -1343,3 +1452,21 @@ function getRelativeDate(days) {
 }
 
 
+// document.querySelector('.theme').addEventListener('click', () => {
+//     if(document.querySelector('.theme').classList.contains('dark')){
+//         document.documentElement.style.setProperty('--beige', 'beige')
+//         document.documentElement.style.setProperty('--white', 'white')
+//         document.documentElement.style.setProperty('--black', 'black')
+//         document.documentElement.style.setProperty('--blue', 'rgb(77, 141, 143)')
+//         document.querySelector('.theme').classList.remove('dark');
+        
+//     }
+//     else{
+//         document.documentElement.style.setProperty('--beige', '#182c25')
+//         document.documentElement.style.setProperty('--white', '#004040')
+//         document.documentElement.style.setProperty('--black', 'white')
+//         document.documentElement.style.setProperty('--blue', '#004040')
+//         document.querySelector('.theme').classList.add('dark');
+        
+//     }
+// })

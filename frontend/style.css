@@ -4,8 +4,9 @@
     --blue: rgb(77, 141, 143);
     --red: rgba(223, 74, 74, 0.418);
     --white: #ffffff;
-    --beige: #ccc;
+    --beige: beige; 
     --poppins:"Poppins", sans-serif;
+    --black: black;
 }
 html{
     height: auot;
@@ -28,8 +29,9 @@ body{
 
 .sidebar {
     flex:0 0 277px; /* Fixed size of 277. */
-    background-color: beige;
+    background-color: var(--beige);
     height: 100vh;
+    max-height: 100vh;
     position: sticky;
     top: 0;
     transition: 0.1s;
@@ -43,11 +45,13 @@ body{
     flex-grow: 2;
     flex-direction: column;
     width: 100%;
+    background-color: var(--white);
 }
 .todos {
     flex:1 1 100% ;
     justify-content: center;
     padding: 2em 20% 0 20%;
+    background-color: var(--white);
 }
 
 .hide-button{
@@ -56,6 +60,7 @@ body{
 
 .todos h1 {
     margin-top: 0.335em;
+    color: var(--black);
 }
 
 .todo-list{
@@ -69,6 +74,7 @@ body{
 
 .sidebar-content{
     max-width: 100%;
+    max-height: 100%;
     padding: 0;
 }
 
@@ -105,7 +111,7 @@ body{
     background-color: aliceblue;
     transition: 0.5s;
     transform: scale(0.95);
-    border: 1px solid beige;
+    border: 1px solid var(--beige);
 }
 
 .sidebutton > svg {
@@ -141,6 +147,7 @@ ul {
 
 .main > div:first-child {
     height: 2em;
+    
 }
 .main > div:first-of-type button{
     width: 36px;
@@ -154,6 +161,8 @@ ul {
 
 .due-date{
     max-width :277px;
+    max-height: 60vh;
+
 }
 .due-date > div:first-child > div {
     text-align: center;
@@ -175,12 +184,25 @@ ul {
 .due-date > div:first-child > ul {
     padding: 0 1em 0 1em;
 }
-
+.due {
+    height: 60vh;
+}
+.due > span{
+    color: var(--black);
+}
+.due li{
+    position: relative;
+}
 .theme {
     position: absolute;
     bottom: 0;
     left: 0.5em;
 }
+
+.theme:hover > svg{
+    transform: scale(1.3);
+}
+
 /*state clas to hide expand button when sidebar is out*/
 .hide {
     display: none;
@@ -188,7 +210,23 @@ ul {
 }
 
 .due{
-    overflow:auto ;
+    overflow-y:auto ;
+    overflow-x: hidden;
+}
+
+.due::-webkit-scrollbar{
+    width: 8px;
+}
+.due::-webkit-scrollbar-track{
+    background: var(--beige);
+    border-radius: 10px;
+}
+.due::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    background: rgba(211, 211, 211, 0.527);
+}
+.due:hover::-webkit-scrollbar-thumb{
+    background:rgba(211, 211, 211, 0.801) ;
 }
 .add-activity {
     padding-left: 0;
@@ -199,7 +237,7 @@ ul {
     background: none;
     > span {
         font-family: var(--poppins);
-        
+        color: var(--black);
         display: flex;
         height: 100%;
         margin: 0   ;
@@ -244,6 +282,7 @@ ul {
 
 .todo-item > span {
     position: absolute;
+    color: var(--black);
 }
 
 .todo-item{
@@ -332,6 +371,10 @@ ul {
 }
 .maintodo > button:nth-of-type(2) > svg{
     border-radius: 4px;
+}
+
+.maintodo > span{
+    color: var(--black);
 }
 /*search box*/
 
@@ -730,7 +773,7 @@ input[type = "date"]:hover{
     height: 92%;
 }
 .editdescription{
-    background-color:beige ;
+    background-color:var(--beige) ;
     height: 100%;
     border-bottom-right-radius: 10px;
     padding: 15px 10px 0 10px;
@@ -935,7 +978,7 @@ input[type = "date"]:hover{
 
 .highlight{
     width: 2px;
-    background-color: beige;
+    background-color: var(--beige);
     visibility: hidden;
 }
 

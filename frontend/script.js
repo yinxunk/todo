@@ -1,4 +1,5 @@
 import { getTodos, addTodo, updateTodo, getLatestTodoId , getDate, deleteTodo, querySpecificTodo} from "./todos.js"
+import {Timestamp} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
 
 
 const token = localStorage.getItem('uid');
@@ -441,7 +442,23 @@ document.addEventListener('DOMContentLoaded',  () => {
                 <div id = "description">${todo.description || " "}</div>
                 <p>${duedate || " "}</p>
             </li>`
+            console.log(todo.duedatestamp)
+            
             ul.insertAdjacentHTML('beforeend', button);
+            if(todo.duedatestamp.seconds > Timestamp.fromDate(new Date()) && todo.duedate != "9999-12-31"){
+                const todoItem = document.querySelector(`.todo-item.count${todo.id} .maintodo`);
+                const mainTodo = document.querySelector(`.todo-item.count${todo.id} .maintodo`);
+                const todoItemeditbutton = document.querySelector(`.todo-item.count${todo.id} .maintodo .editbutton`);
+                if (todoItem && mainTodo) { 
+                    if (todo.duedatestamp.seconds > Timestamp.fromDate(new Date()) && todo.duedate != "9999-12-31") {
+                        //mainTodo.style.borderLeft = '3px solid rgb(235, 70, 70)';
+                        document.querySelector(`.todo-item.count${todo.id} .maintodo .check > svg`).setAttribute("fill", 'red');
+                        
+                    }
+                } else {
+                    console.log(`Element .todo-item.count${todo.id} not found.`);
+                }
+            }
             switch (todo.priority) {
                 case 1:
                     document.querySelector(`.priorityedit.count${todo.id} > #one`).style.border = "1px solid lightgray"
@@ -625,7 +642,54 @@ ul.addEventListener('click', (e) => {
                 case "one":
                     dates.style.border = "1px solid lightgray"
                     updateTodo(id, {duedate: today.toISOString().split('T')[0]});
-                    editeddate.forEach(item => item.textContent = today.toISOString().split('T')[0]);
+                    updateTodo(id, {duedatestamp: Timestamp.fromDate(new Date(today.toISOString().split('T')[0]))});
+                    document.querySelector(`.todo-item.count${id} p`).textContent = today.toISOString().split('T')[0];
+                    if(document.querySelector(`.due .todo-item.count${id}`)){
+                        editeddate.forEach(item => item.textContent = today.toISOString().split('T')[0]);
+                    }
+                    else{
+                        const duedates = document.querySelector('.due-date > div > ul');
+                        duedates.innerHTML = '';
+                        getDate(token).then((data) => {
+                            console.log('hi');
+                            duedates.innerHTML = ''
+                            data.forEach((todo) => {
+                                console.log(todo.id);
+                                console.log(todo.duedate);
+                                console.log(todo.description);
+                                todo.description = todo.description === undefined ? '' : todo.description;
+                                let duedate = todo.duedate
+                                if(todo.duedate === '9999-12-31'){
+                                    console.log('true');
+                                    duedate = ' ';
+                                    return;
+                                }
+                                const button =
+                                    `<li class="todo-item count${todo.id}">
+                                        <button class="check count${todo.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                                            <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                                            <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                                            </svg>
+                                        </button>
+                                        <span>${todo.title}</span>
+                                        <div class ='description'>${todo.description || " "}</div>
+                                        <p>${duedate || " "}</p>
+                                    </li>`
+                                duedates.insertAdjacentHTML('beforeend', button)
+                            })
+                            if (uldate.childElementCount === 0) {
+                                console.log('hihihhi');
+                                const li = document.createElement("li");
+                                const p = document.createElement('p');
+                                p.textContent = "No due dates"
+                                li.appendChild(p);
+                                uldate.appendChild(li);
+                            }
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                    }
                     break;
 
                 case "two":
@@ -633,13 +697,62 @@ ul.addEventListener('click', (e) => {
                     const tomorrow = new Date(today);
                     tomorrow.setDate(today.getDate() + 1)
                     updateTodo(id, {duedate: tomorrow.toISOString().split('T')[0]});
-                    editeddate.forEach(item => item.textContent = tomorrow.toISOString().split('T')[0]);
+                    updateTodo(id,{duedatestamp: Timestamp.fromDate(new Date(tomorrow.toISOString().split('T')[0]))})
+                    document.querySelector(`.todo-item.count${id} p`).textContent = tomorrow.toISOString().split('T')[0];
+                    if(document.querySelector(`.due .todo-item.count${id}`)){
+                        editeddate.forEach(item => item.textContent = tomorrow.toISOString().split('T')[0]);
+                    }
+                    else{
+                        const duedates = document.querySelector('.due-date > div > ul');
+                        duedates.innerHTML = '';
+                        getDate(token).then((data) => {
+                            console.log('hi');
+                            duedates.innerHTML = ''
+                            data.forEach((todo) => {
+                                console.log(todo.id);
+                                console.log(todo.duedate);
+                                console.log(todo.description);
+                                todo.description = todo.description === undefined ? '' : todo.description;
+                                let duedate = todo.duedate
+                                if(todo.duedate === '9999-12-31'){
+                                    console.log('true');
+                                    duedate = ' ';
+                                    return;
+                                }
+                                const button =
+                                    `<li class="todo-item count${todo.id}">
+                                        <button class="check count${todo.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                                            <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                                            <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                                            </svg>
+                                        </button>
+                                        <span>${todo.title}</span>
+                                        <div class ='description'>${todo.description || " "}</div>
+                                        <p>${duedate || " "}</p>
+                                    </li>`
+                                duedates.insertAdjacentHTML('beforeend', button)
+                            })
+                            if (uldate.childElementCount === 0) {
+                                console.log('hihihhi');
+                                const li = document.createElement("li");
+                                const p = document.createElement('p');
+                                p.textContent = "No due dates"
+                                li.appendChild(p);
+                                uldate.appendChild(li);
+                            }
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                    }
                     break;
 
                 case "three":
                     dates.style.border = "1px solid lightgray"
-                    updateTodo(id, {duedate: null});
-                    editeddate.forEach(item => item.textContent = null);
+                    updateTodo(id, {duedate: '9999-12-31'});
+                    updateTodo(id, {duedatestamp: Timestamp.fromDate(new Date('9999-12-31'))});
+                    editeddate.forEach(item => item.textContent = ' ');
+                    document.querySelector(`.due .todo-item.count${id}`).remove();
                     break;
 
                 case "four":
@@ -647,7 +760,54 @@ ul.addEventListener('click', (e) => {
                     const nextweek = new Date(today);
                     nextweek.setDate(today.getDate() + 7);
                     updateTodo(id, {duedate: nextweek.toISOString().split('T')[0]});
-                    editeddate.forEach(item => item.textContent = nextweek.toISOString().split('T')[0]);
+                    updateTodo(id, {duedatestamp: Timestamp.fromDate(new Date(nextweek.toISOString().split('T')[0]))})
+                    document.querySelector(`.todo-item.count${id} p`).textContent = nextweek.toISOString().split('T')[0];
+                    if(document.querySelector(`.due .todo-item.count${id}`)){
+                        editeddate.forEach(item => item.textContent = nextweek.toISOString().split('T')[0]);
+                    }
+                    else{
+                        const duedates = document.querySelector('.due-date > div > ul');
+                        duedates.innerHTML = '';
+                        getDate(token).then((data) => {
+                            console.log('hi');
+                            duedates.innerHTML = ''
+                            data.forEach((todo) => {
+                                console.log(todo.id);
+                                console.log(todo.duedate);
+                                console.log(todo.description);
+                                todo.description = todo.description === undefined ? '' : todo.description;
+                                let duedate = todo.duedate
+                                if(todo.duedate === '9999-12-31'){
+                                    console.log('true');
+                                    duedate = ' ';
+                                    return;
+                                }
+                                const button =
+                                    `<li class="todo-item count${todo.id}">
+                                        <button class="check count${todo.id}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                                            <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                                            <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                                            </svg>
+                                        </button>
+                                        <span>${todo.title}</span>
+                                        <div class ='description'>${todo.description || " "}</div>
+                                        <p>${duedate || " "}</p>
+                                    </li>`
+                                duedates.insertAdjacentHTML('beforeend', button)
+                            })
+                            if (uldate.childElementCount === 0) {
+                                console.log('hihihhi');
+                                const li = document.createElement("li");
+                                const p = document.createElement('p');
+                                p.textContent = "No due dates"
+                                li.appendChild(p);
+                                uldate.appendChild(li);
+                            }
+                        }).catch((err) => {
+                            console.log(err);
+                        })
+                    }
                     break;
 
             }
@@ -656,6 +816,7 @@ ul.addEventListener('click', (e) => {
 
 
         }
+        
 
     }
     if(e.target.closest('.edittab')){
@@ -815,6 +976,7 @@ ul.addEventListener('click', (e) => {
                     const numberDate = today.toISOString().split('T')[0];
                     date = numberDate;
                     updateTodo(id, {duedate: numberDate});
+                    updateTodo(id, {duedatestamp: Timestamp.fromDate(new Date(numberDate))});
                     datesvg.style.fill = '#339966'
                     datesvg.innerHTML = `<path d="M360-300q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/>`;
                     duedateeditbuttonspan.textContent = 'Today';
@@ -826,6 +988,7 @@ ul.addEventListener('click', (e) => {
                     tomorrow.setDate(tomorrow.getDate() + 1); 
                     date = tomorrow.toISOString().split('T')[0];
                     updateTodo(id, {duedate: tomorrow.toISOString().split('T')[0]});
+                    updateTodo(id, {duedatestamp: Timestamp.fromDate(new Date(date))});
                     datesvg.style.fill = '#ffcc00'
                     datesvg.innerHTML = `<path d="M450-751.54v-147.69h60v147.69h-60Zm242.92 100.77-41.15-41.15 103.15-106.54 42.54 43.15-104.54 104.54ZM751.54-450v-60h147.69v60H751.54ZM450-60.77v-147.31h60v147.31h-60ZM267.85-652.38 161.54-754.92l43.54-42.16 104.54 104.16-41.77 40.54Zm486.46 490.84L651.77-268.08l40.54-40.15 104.77 101.92-42.77 44.77ZM60.77-450v-60h147.69v60H60.77Zm143.92 288.46-41.77-43.54 103.16-103.15 21.69 20.46 22.08 21.08-105.16 105.15ZM480.09-260q-91.63 0-155.86-64.14Q260-388.28 260-479.91q0-91.63 64.14-155.86Q388.28-700 479.91-700q91.63 0 155.86 64.14Q700-571.72 700-480.09q0 91.63-64.14 155.86Q571.72-260 480.09-260Zm-.09-60q66 0 113-47t47-113q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-160Z"/>`;
                     duedateeditbuttonspan.textContent = 'Tomorrow';
@@ -833,6 +996,8 @@ ul.addEventListener('click', (e) => {
                 }
                 else if(item.textContent.includes('No')){
                     updateTodo(id, {duedate: "9999-12-31"});
+                    updateTodo(id, {duedatestamp: Timestamp.fromDate(new Date("9999-12-31"))});
+                    
                     date = '';
                     datesvg.innerHTML = `<path d="M100-220v-220q0-22.38 10.62-43.42Q121.23-504.46 140-518v-102q0-41.92 29.04-70.96Q198.08-720 240-720h170q21.85 0 39.15 8.5Q466.46-703 480-688q13.54-15 30.85-23.5 17.3-8.5 39.15-8.5h170q41.92 0 70.96 29.04Q820-661.92 820-620v102q18.77 13.54 29.38 34.58Q860-462.38 860-440v220h-60v-80H160v80h-60Zm410-320h250v-80q0-17-11.5-28.5T720-660H550q-17 0-28.5 11.5T510-620v80Zm-310 0h250v-80q0-17-11.5-28.5T410-660H240q-17 0-28.5 11.5T200-620v80Zm-40 180h640v-80q0-17-11.5-28.5T760-480H200q-17 0-28.5 11.5T160-440v80Zm640 0H160h640Z"/>`;  
                     duedateeditbuttonspan.textContent = 'ZZZ';
@@ -843,6 +1008,7 @@ ul.addEventListener('click', (e) => {
                     nextweek.setDate(nextweek.getDate() + 7);
                     date = nextweek.toISOString().split('T')[0];
                     updateTodo(id, {duedate: nextweek.toISOString().split('T')[0]})
+                    updateTodo(id, {duedatestamp: Timestamp.fromDate(new Date(date))});
                     datesvg.style.fill = '#6666ff'
                     datesvg.innerHTML = `<path d="M440-273.85 586.15-420 440-566.15 397.85-524l104 104-104 104L440-273.85ZM172.31-140Q142-140 121-161q-21-21-21-51.31v-415.38Q100-658 121-679q21-21 51.31-21H340v-67.69Q340-798 361-819q21-21 51.31-21h135.38Q578-840 599-819q21 21 21 51.31V-700h167.69Q818-700 839-679q21 21 21 51.31v415.38Q860-182 839-161q-21 21-51.31 21H172.31Zm0-60h615.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-415.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v415.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM400-700h160v-67.69q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H412.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46V-700ZM160-200v-440 440Z"/>`;   
                     duedateeditbuttonspan.textContent = 'NextWeek';
@@ -1493,38 +1659,184 @@ recentsearch.addEventListener('click', (e) => {
                 const numberDate = today.toISOString().split('T')[0];
                 date = numberDate;
                 updateTodo(id, {duedate: numberDate});
+                updateTodo(id, {duedatestamp: Timestamp.fromDate(new Date(numberDate))});
                 datesvg.style.fill = '#339966'
                 datesvg.innerHTML = `<path d="M360-300q-42 0-71-29t-29-71q0-42 29-71t71-29q42 0 71 29t29 71q0 42-29 71t-71 29ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Z"/>`;
                 duedateeditbuttonspan.textContent = 'Today';
                 clicked = 'one';
-
+                document.querySelector(`.todo-item.count${id} p`).textContent = numberDate;
+                if(document.querySelector(`.due .todo-item.count${id}`)){
+                    editeddate.forEach(item => item.textContent = numberDate);
+                }
+                else{
+                    const duedates = document.querySelector('.due-date > div > ul');
+                    duedates.innerHTML = '';
+                    getDate(token).then((data) => {
+                        console.log('hi');
+                        duedates.innerHTML = ''
+                        data.forEach((todo) => {
+                            console.log(todo.id);
+                            console.log(todo.duedate);
+                            console.log(todo.description);
+                            todo.description = todo.description === undefined ? '' : todo.description;
+                            let duedate = todo.duedate
+                            if(todo.duedate === '9999-12-31'){
+                                console.log('true');
+                                duedate = ' ';
+                                return;
+                            }
+                            const button =
+                                `<li class="todo-item count${todo.id}">
+                                    <button class="check count${todo.id}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                                        <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                                        <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                                        </svg>
+                                    </button>
+                                    <span>${todo.title}</span>
+                                    <div class ='description'>${todo.description || " "}</div>
+                                    <p>${duedate || " "}</p>
+                                </li>`
+                            duedates.insertAdjacentHTML('beforeend', button)
+                        })
+                        if (uldate.childElementCount === 0) {
+                            console.log('hihihhi');
+                            const li = document.createElement("li");
+                            const p = document.createElement('p');
+                            p.textContent = "No due dates"
+                            li.appendChild(p);
+                            uldate.appendChild(li);
+                        }
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+                }
             }
             else if(item.textContent.includes('Tomorrow')){
                 const tomorrow = new Date();
                 tomorrow.setDate(tomorrow.getDate() + 1); 
                 date = tomorrow.toISOString().split('T')[0];
                 updateTodo(id, {duedate: tomorrow.toISOString().split('T')[0]});
+                updateTodo(id, {duedatestamp: Timestamp.fromDate(new Date(date))});
                 datesvg.style.fill = '#ffcc00'
                 datesvg.innerHTML = `<path d="M450-751.54v-147.69h60v147.69h-60Zm242.92 100.77-41.15-41.15 103.15-106.54 42.54 43.15-104.54 104.54ZM751.54-450v-60h147.69v60H751.54ZM450-60.77v-147.31h60v147.31h-60ZM267.85-652.38 161.54-754.92l43.54-42.16 104.54 104.16-41.77 40.54Zm486.46 490.84L651.77-268.08l40.54-40.15 104.77 101.92-42.77 44.77ZM60.77-450v-60h147.69v60H60.77Zm143.92 288.46-41.77-43.54 103.16-103.15 21.69 20.46 22.08 21.08-105.16 105.15ZM480.09-260q-91.63 0-155.86-64.14Q260-388.28 260-479.91q0-91.63 64.14-155.86Q388.28-700 479.91-700q91.63 0 155.86 64.14Q700-571.72 700-480.09q0 91.63-64.14 155.86Q571.72-260 480.09-260Zm-.09-60q66 0 113-47t47-113q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-160Z"/>`;
                 duedateeditbuttonspan.textContent = 'Tomorrow';
                 clicked = 'two';
+                document.querySelector(`.todo-item.count${id} p`).textContent = date;
+                if(document.querySelector(`.due .todo-item.count${id}`)){
+                    editeddate.forEach(item => item.textContent = date);
+                }
+                else{
+                    const duedates = document.querySelector('.due-date > div > ul');
+                    duedates.innerHTML = '';
+                    getDate(token).then((data) => {
+                        console.log('hi');
+                        duedates.innerHTML = ''
+                        data.forEach((todo) => {
+                            console.log(todo.id);
+                            console.log(todo.duedate);
+                            console.log(todo.description);
+                            todo.description = todo.description === undefined ? '' : todo.description;
+                            let duedate = todo.duedate
+                            if(todo.duedate === '9999-12-31'){
+                                console.log('true');
+                                duedate = ' ';
+                                return;
+                            }
+                            const button =
+                                `<li class="todo-item count${todo.id}">
+                                    <button class="check count${todo.id}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                                        <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                                        <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                                        </svg>
+                                    </button>
+                                    <span>${todo.title}</span>
+                                    <div class ='description'>${todo.description || " "}</div>
+                                    <p>${duedate || " "}</p>
+                                </li>`
+                            duedates.insertAdjacentHTML('beforeend', button)
+                        })
+                        if (uldate.childElementCount === 0) {
+                            console.log('hihihhi');
+                            const li = document.createElement("li");
+                            const p = document.createElement('p');
+                            p.textContent = "No due dates"
+                            li.appendChild(p);
+                            uldate.appendChild(li);
+                        }
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+                }
             }
             else if(item.textContent.includes('No')){
                 updateTodo(id, {duedate: "9999-12-31"});
+                updateTodo(id, {duedatestamp: Timestamp.fromDate(new Date('9999-12-31'))});
                 date = '';
                 datesvg.innerHTML = `<path d="M100-220v-220q0-22.38 10.62-43.42Q121.23-504.46 140-518v-102q0-41.92 29.04-70.96Q198.08-720 240-720h170q21.85 0 39.15 8.5Q466.46-703 480-688q13.54-15 30.85-23.5 17.3-8.5 39.15-8.5h170q41.92 0 70.96 29.04Q820-661.92 820-620v102q18.77 13.54 29.38 34.58Q860-462.38 860-440v220h-60v-80H160v80h-60Zm410-320h250v-80q0-17-11.5-28.5T720-660H550q-17 0-28.5 11.5T510-620v80Zm-310 0h250v-80q0-17-11.5-28.5T410-660H240q-17 0-28.5 11.5T200-620v80Zm-40 180h640v-80q0-17-11.5-28.5T760-480H200q-17 0-28.5 11.5T160-440v80Zm640 0H160h640Z"/>`;  
                 duedateeditbuttonspan.textContent = 'ZZZ';
                 clicked = 'three';
+                document.querySelector(`.due .todo-item.count${id}`).remove();
+                document.querySelectorAll(`.todo-item.count${id} p`).forEach(item => item.textContent = '')
             }
             else if(item.textContent.includes('Next')){
                 const nextweek = new Date();
                 nextweek.setDate(nextweek.getDate() + 7);
                 date = nextweek.toISOString().split('T')[0];
-                updateTodo(id, {duedate: nextweek.toISOString().split('T')[0]})
+                updateTodo(id, {duedate: nextweek.toISOString().split('T')[0]});
+                updateTodo(id, {duedatestamp: Timestamp.fromDate(new Date(date))});
                 datesvg.style.fill = '#6666ff'
                 datesvg.innerHTML = `<path d="M440-273.85 586.15-420 440-566.15 397.85-524l104 104-104 104L440-273.85ZM172.31-140Q142-140 121-161q-21-21-21-51.31v-415.38Q100-658 121-679q21-21 51.31-21H340v-67.69Q340-798 361-819q21-21 51.31-21h135.38Q578-840 599-819q21 21 21 51.31V-700h167.69Q818-700 839-679q21 21 21 51.31v415.38Q860-182 839-161q-21 21-51.31 21H172.31Zm0-60h615.38q4.62 0 8.46-3.85 3.85-3.84 3.85-8.46v-415.38q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H172.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46v415.38q0 4.62 3.85 8.46 3.84 3.85 8.46 3.85ZM400-700h160v-67.69q0-4.62-3.85-8.46-3.84-3.85-8.46-3.85H412.31q-4.62 0-8.46 3.85-3.85 3.84-3.85 8.46V-700ZM160-200v-440 440Z"/>`;   
                 duedateeditbuttonspan.textContent = 'NextWeek';
                 clicked = 'four';
+                document.querySelector(`.todo-item.count${id} p`).textContent = date;
+                if(document.querySelector(`.due .todo-item.count${id}`)){
+                    editeddate.forEach(item => item.textContent = date);
+                }
+                else{
+                    const duedates = document.querySelector('.due-date > div > ul');
+                    duedates.innerHTML = '';
+                    getDate(token).then((data) => {
+                        console.log('hi');
+                        duedates.innerHTML = ''
+                        data.forEach((todo) => {
+                            console.log(todo.id);
+                            console.log(todo.duedate);
+                            console.log(todo.description);
+                            todo.description = todo.description === undefined ? '' : todo.description;
+                            let duedate = todo.duedate
+                            if(todo.duedate === '9999-12-31'){
+                                console.log('true');
+                                duedate = ' ';
+                                return;
+                            }
+                            const button =
+                                `<li class="todo-item count${todo.id}">
+                                    <button class="check count${todo.id}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#5f6368">
+                                        <path d="M480.17-132q-72.17 0-135.73-27.39-63.56-27.39-110.57-74.35-47.02-46.96-74.44-110.43Q132-407.65 132-479.83q0-72.17 27.39-135.73 27.39-63.56 74.35-110.57 46.96-47.02 110.43-74.44Q407.65-828 479.83-828q72.17 0 135.73 27.39 63.56 27.39 110.57 74.35 47.02 46.96 74.44 110.43Q828-552.35 828-480.17q0 72.17-27.39 135.73-27.39 63.56-74.35 110.57-46.96 47.02-110.43 74.44Q552.35-132 480.17-132Zm-.17-28q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/>
+                                        <path class="tick" d="M400-304 240-464l56-56 104 104 264-264 56 56-320 320Z"/>
+                                        </svg>
+                                    </button>
+                                    <span>${todo.title}</span>
+                                    <div class ='description'>${todo.description || " "}</div>
+                                    <p>${duedate || " "}</p>
+                                </li>`
+                            duedates.insertAdjacentHTML('beforeend', button)
+                        })
+                        if (uldate.childElementCount === 0) {
+                            console.log('hihihhi');
+                            const li = document.createElement("li");
+                            const p = document.createElement('p');
+                            p.textContent = "No due dates"
+                            li.appendChild(p);
+                            uldate.appendChild(li);
+                        }
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+                }
             }
             for(let i  of number){
                 if(clicked === i){
@@ -1631,6 +1943,7 @@ document.querySelector('.theme').addEventListener('click', () => {
         document.documentElement.style.setProperty('--black', 'black')
         document.documentElement.style.setProperty('--blue', 'rgb(77, 141, 143)')
         document.querySelector('.theme').classList.remove('dark');
+        document.querySelector('.theme > svg').innerHTML = `<path d="M480-120q-150 0-255-105T120-480q0-150 105-255t255-105q14 0 27.5 1t26.5 3q-41 29-65.5 75.5T444-660q0 90 63 153t153 63q55 0 101-24.5t75-65.5q2 13 3 26.5t1 27.5q0 150-105 255T480-120Zm0-80q88 0 158-48.5T740-375q-20 5-40 8t-40 3q-123 0-209.5-86.5T364-660q0-20 3-40t8-40q-78 32-126.5 102T200-480q0 116 82 198t198 82Zm-10-270Z"/>`
         
     }
     else{
@@ -1639,6 +1952,8 @@ document.querySelector('.theme').addEventListener('click', () => {
         document.documentElement.style.setProperty('--black', '#d3f0f0')
         document.documentElement.style.setProperty('--blue', 'beige')
         document.querySelector('.theme').classList.add('dark');
+        document.querySelector('.theme > svg').innerHTML = `<path d="M450-751.54v-147.69h60v147.69h-60Zm242.92 100.77-41.15-41.15 103.15-106.54 42.54 43.15-104.54 104.54ZM751.54-450v-60h147.69v60H751.54ZM450-60.77v-147.31h60v147.31h-60ZM267.85-652.38 161.54-754.92l43.54-42.16 104.54 104.16-41.77 40.54Zm486.46 490.84L651.77-268.08l40.54-40.15 104.77 101.92-42.77 44.77ZM60.77-450v-60h147.69v60H60.77Zm143.92 288.46-41.77-43.54 103.16-103.15 21.69 20.46 22.08 21.08-105.16 105.15ZM480.09-260q-91.63 0-155.86-64.14Q260-388.28 260-479.91q0-91.63 64.14-155.86Q388.28-700 479.91-700q91.63 0 155.86 64.14Q700-571.72 700-480.09q0 91.63-64.14 155.86Q571.72-260 480.09-260Zm-.09-60q66 0 113-47t47-113q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Zm0-160Z"/>`
+
         
     }
 })

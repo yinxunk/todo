@@ -251,6 +251,7 @@ h2{
 }
 #registerbutton:hover{
     background-color:rgb(56, 102, 104);
+    color : rgb(235, 70, 70)
 }
 #registergooglebutton{
     background-color: lightgray;
